@@ -250,7 +250,8 @@ it_entrance_counts <- function(tr, zone, bin = NULL, frames = NULL) {
   events <- data.frame(track = as.integer(ev$track), direction = as.character(ifelse(ev$type == "entered", "in", "out")),
                        time = as.numeric(ifelse(ev$type == "entered", ev$end, ev$start)), stringsAsFactors = FALSE)
   events <- events[order(events$time), , drop = FALSE]
-  rng <- if (!is.null(frames)) range(frames$time) else range(tr$time, na.rm = TRUE)
+  tt <- tr$time[is.finite(tr$time)]
+  rng <- if (!is.null(frames)) range(frames$time) else if (length(tt)) range(tt) else c(0, 0)
   if (is.null(bin)) bin <- max(diff(rng), 1e-9)
   br <- seq(rng[1], rng[2] + bin, by = bin)
   if (length(br) < 2) br <- c(rng[1], rng[1] + bin)

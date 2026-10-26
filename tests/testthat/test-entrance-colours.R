@@ -12,6 +12,9 @@ test_that("entrance counts classify entries and exits", {
   expect_equal(ec$counts$net, ec$counts$n_in - ec$counts$n_out)
   empty <- it_entrance_counts(tr[tr$track == 4, ], zone)
   expect_equal(nrow(empty$events), 0)
+  none <- it_entrance_counts(tr[0, ], zone)
+  expect_equal(nrow(none$events), 0)
+  expect_equal(sum(none$counts$n_in) + sum(none$counts$n_out), 0)
 })
 
 test_that("the entrance is found at the cluster of track end points", {

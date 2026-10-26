@@ -18,3 +18,6 @@
   of videos (`it_frames_from_images()`).
 * HOTA (`it_eval_hota()`, `it_combine_hota()`), and box-overlap matching in
   `it_eval_detections()`.
+* `it_video_info()` reads WebM, Ogg and other files that are not MP4 or
+  QuickTime without stopping at the rotation check.
+* `it_entrance_counts()` returns zero counts when there are no tracks.

@@ -33,13 +33,16 @@ video_rotation <- function(file) {
   on.exit(close(con))
   fsize <- file.size(file)
   rd32 <- function(raw, i) sum(as.numeric(raw[i:(i + 3)]) * 256^(3:0))
+  # box types are four printable ASCII characters; anything else is not an MP4 or QuickTime file
+  box_type <- function(raw) if (all(raw >= as.raw(0x20) & raw <= as.raw(0x7e))) rawToChar(raw) else NA_character_
   pos <- 0
   moov <- NULL
   while (pos + 8 <= fsize) {
     seek(con, pos)
     h <- readBin(con, "raw", 8)
     if (length(h) < 8) break
-    size <- rd32(h, 1); type <- rawToChar(h[5:8])
+    size <- rd32(h, 1); type <- box_type(h[5:8])
+    if (is.na(type)) return(0)
     hdr <- 8
     if (size == 1) { size <- sum(as.numeric(readBin(con, "raw", 8)) * 256^(7:0)); hdr <- 16 }
     if (size == 0) size <- fsize - pos
@@ -51,8 +54,8 @@ video_rotation <- function(file) {
   boxes <- function(raw) {
     out <- list(); i <- 1; n <- length(raw)
     while (i + 7 <= n) {
-      size <- rd32(raw, i); type <- rawToChar(raw[(i + 4):(i + 7)])
-      if (size < 8 || i + size - 1 > n) break
+      size <- rd32(raw, i); type <- box_type(raw[(i + 4):(i + 7)])
+      if (is.na(type) || size < 8 || i + size - 1 > n) break
       out[[length(out) + 1]] <- list(type = type, data = raw[(i + 8):(i + size - 1)])
       i <- i + size
     }

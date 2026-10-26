@@ -34,3 +34,10 @@ test_that("point in polygon follows the even-odd rule", {
   sq <- data.frame(x = c(0, 10, 10, 0), y = c(0, 0, 10, 10))
   expect_equal(it_point_in_polygon(c(5, 15, NA), c(5, 5, 1), sq$x, sq$y), c(TRUE, FALSE, NA))
 })
+
+test_that("rotation metadata is read only from MP4 and QuickTime files", {
+  f <- tempfile(fileext = ".ogv")
+  writeBin(c(charToRaw("OggS"), as.raw(c(0, 2, 0, 0)), as.raw(0:63)), f)
+  expect_identical(InsectTrack:::video_rotation(f), 0)
+  unlink(f)
+})
