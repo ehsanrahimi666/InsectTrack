@@ -1,0 +1,169 @@
+---
+title: "Tracking insects in videos with InsectTrack"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tracking insects in videos with InsectTrack}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+InsectTrack turns videos of insects into tracks and activity measures. A
+video is read frame by frame, insects are detected in every analysed frame,
+detections are linked into tracks, and the tracks are summarised as counts,
+activity time series, heat maps and hot spots, visits to regions such as
+flowers, insects entering and leaving nests and hives, and proximity
+interactions. An annotated video shows every insect with its own colour and
+identity label.
+
+A track is the record of one insect while it stays in view. An insect that
+leaves the field of view and returns starts a new track, so the number of
+tracks is not the number of individuals.
+
+## Installation
+
+```{r, eval = FALSE}
+remotes::install_github("ehsanrahimi666/InsectTrack")
+```
+
+Detection with deep-learning models (YOLO, Grounding DINO, OWLv2, OWL-ViT),
+segmentation with SAM 2.1 and the BoxMOT trackers run in Python through
+'reticulate'. `it_install_backend()` creates a virtual environment with the
+required modules; `it_backend_status()` reports the module versions and the
+device (`cuda`, `mps` or `cpu`) that will be used.
+
+```{r, eval = FALSE}
+library(InsectTrack)
+it_install_backend()                 # once; it_install_backend(gpu = TRUE) for an NVIDIA GPU
+reticulate::use_virtualenv("insecttrack")
+it_backend_status()
+```
+
+Background subtraction, the trackers implemented in R (Hungarian assignment,
+SORT and ByteTrack), all summaries, figures, the annotated video and the
+evaluation metrics need no Python.
+
+## One call per video
+
+`it_track_video()` runs the whole analysis and writes the results to a
+folder: the annotated video, tables (`detections.csv`, `tracks.csv`,
+`track_summary.csv`, `activity.csv`, `heatmap.csv`, and, when requested,
+`entrance_events.csv`, `entrance_counts.csv`, `visits.csv`,
+`line_crossings.csv`, `interactions.csv`), figures (trajectories, heat map,
+hot spots, activity, entrance traffic), `settings.json` with all settings and
+software versions, and `report.html`. Any format that FFmpeg reads can be
+used, including smartphone videos with a rotation flag.
+
+Honeybees on flowers, with a YOLO model trained on annotated frames of the
+study system and flower outlines as regions of interest:
+
+```{r, eval = FALSE}
+res <- it_track_video("delosperma.mp4", detector = "yolo", model = "bees_yolo.pt",
+                      detector_args = list(imgsz = 1280), fps = 10,
+                      rois = it_read_rois_json("flowers.json"), output_dir = "results/delosperma")
+res
+```
+
+A hive entrance without a trained model: Grounding DINO finds the bees from a
+text prompt, and the entrance is located from the end points of the tracks
+(`entrance = "auto"`) or given as a polygon. Several prompts can be given;
+the one with the highest scores on a few frames is used.
+
+```{r, eval = FALSE}
+res <- it_track_video("hive.mp4", detector = "gdino", prompt = c("bee", "honeybee"),
+                      fps = 5, duration = 60, entrance = "auto", output_dir = "results/hive")
+res$entrance$counts      # insects in and out per time bin
+```
+
+A laboratory arena with a plain background, where background subtraction is
+sufficient and fast:
+
+```{r, eval = FALSE}
+res <- it_track_video("arena.mp4", detector = "motion", fps = 25, interaction_dist = 60,
+                      detector_args = list(min_area = 20), output_dir = "results/arena")
+```
+
+`it_track_videos()` processes several videos with the same settings and
+returns one summary row per video.
+
+## Choosing a detector
+
+* A **YOLO model trained on frames of the study system** is the most
+  accurate and fastest option (about 0.1-0.3 s per frame on a CPU, much less
+  on a GPU). Models do not transfer well between scenes: a model trained on
+  small bees on flowers may miss bees filmed close up at a hive entrance.
+* **Grounding DINO** (`detector = "gdino"`) and **OWLv2 or OWL-ViT**
+  (`detector = "owl"`) detect insects described by a text prompt without
+  training. They take several seconds per frame on a CPU and miss many small
+  insects, so they are best used on a GPU, at a reduced frame rate, or to
+  pre-label frames for annotation.
+* **Background subtraction** (`detector = "motion"`) needs a fixed camera
+  and a plain background; outdoors, moving leaves, flowers and shadows cause
+  many false detections.
+
+## From pre-labels to a trained model
+
+`it_prelabel()` samples frames, detects insects with Grounding DINO, refines
+the boxes with SAM 2.1 and writes images and labels that CVAT, Label Studio
+or Roboflow import. After correction, the labels train a YOLO model with
+'Ultralytics', which is then passed to `it_track_video()` as `model`.
+
+```{r, eval = FALSE}
+it_prelabel("hive.mp4", out_dir = "prelabels", n = 200, prompt = "bee")
+# correct the boxes in an annotation tool, then in Python:
+#   from ultralytics import YOLO
+#   YOLO("yolo26n.pt").train(data = "bees.yaml", imgsz = 1280, epochs = 100)
+```
+
+## Step by step
+
+The steps of `it_track_video()` are available as separate functions.
+
+```{r, eval = FALSE}
+fr  <- it_extract_frames("hive.mp4", fps = 10, width = 1280, gray = FALSE, format = "png")
+det <- it_detect_gdino(fr, prompt = "bee")
+tr  <- it_track(det, method = "bytetrack", frame_rate = 10)
+tr  <- it_stitch(tr, max_gap = 1, max_dist = 60)
+hm  <- it_hotspots(it_heatmap(tr, 1280, 720, cell = 20, frames = fr))
+zone <- it_find_entrance(tr, 1280, 720)
+ec  <- it_entrance_counts(tr, zone, bin = 10, frames = fr)
+it_render_video(fr, tr, "hive_tracked.mp4", entrance = zone, events = ec$events)
+```
+
+The example below runs without Python on a small synthetic video with two
+moving squares.
+
+```{r}
+library(InsectTrack)
+dir <- tempfile("synthetic_"); dir.create(dir)
+for (k in 1:30) {
+  m <- array(0.9, c(120, 160, 3))
+  m[40 + 0:5, 20 + 3 * k + 0:5, ] <- 0.1
+  m[80 + 0:5, 140 - 2 * k + 0:5, ] <- 0.1
+  png::writePNG(m, file.path(dir, sprintf("img_%03d.png", k)))
+}
+video <- file.path(dir, "synthetic.mp4")
+av::av_encode_video(list.files(dir, "\\.png$", full.names = TRUE), video, framerate = 10, verbose = FALSE)
+res <- it_track_video(video, output_dir = file.path(dir, "out"), detector = "motion", fps = 10,
+                      detector_args = list(min_area = 10, bg_frames = 15), verbose = FALSE)
+res
+head(res$track_summary[, c("track", "n", "duration", "path_length", "mean_speed")])
+```
+
+## Accuracy against annotations
+
+Detections and tracks can be compared with annotated frames:
+`it_eval_detections()` (precision, recall and F1, matching by distance or
+box overlap), `it_eval_tracks()` (CLEAR MOT and IDF1) and `it_eval_hota()`
+(HOTA with its detection, association and localisation components;
+`it_combine_hota()` pools sequences).
+
+```{r}
+g <- data.frame(frame = 1:20, x = 1:20 * 3, y = 40, id = 1, width = 8, height = 8)
+p <- transform(g, track = ifelse(frame <= 10, 1, 2))  # one insect split into two tracks
+it_eval_hota(p, g)[, c("hota", "deta", "assa")]
+it_eval_tracks(p, g, max_dist = 5)[, c("mota", "idf1", "id_switches")]
+```

@@ -1,0 +1,50 @@
+Package: InsectTrack
+Type: Package
+Title: Detection, Tracking and Activity Mapping of Insects in Videos
+Version: 0.1.0
+Authors@R: c(
+    person("Ehsan", "Rahimi", email = "ehsanrahimi666@gmail.com",
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-8401-472X")),
+    person("Chuleui", "Jung", email = "cjung@gknu.ac.kr", role = "aut"))
+Description: Detects and tracks insects in videos and converts their
+    trajectories into activity measures: counts, activity time series,
+    occupancy heat maps and hot spots, visits to regions of interest such as
+    flowers, insects entering and leaving nests and hives, and proximity
+    interactions. One function analyses a whole video and writes an annotated
+    video with a coloured trajectory and identity label for every insect,
+    tables, figures and a report. Detection uses trained 'YOLO' models,
+    open-vocabulary detectors driven by a text prompt ('Grounding DINO',
+    'OWLv2'), or background subtraction implemented in R and C++; 'SAM 2.1'
+    outlines detected insects to measure body size and to pre-label frames for
+    annotation. Tracking uses optimal assignment with motion prediction, 'SORT'
+    or 'ByteTrack' implemented in R, or the trackers of the Python package
+    'BoxMOT'. Detections and tracks can be evaluated against annotations with
+    standard multi-object tracking metrics (CLEAR MOT, IDF1, HOTA).
+License: GPL (>= 3)
+Depends:
+    R (>= 4.1.0)
+Imports:
+    av,
+    clue,
+    graphics,
+    grDevices,
+    jpeg,
+    jsonlite,
+    png,
+    Rcpp,
+    stats,
+    tools,
+    utils
+LinkingTo:
+    Rcpp
+Suggests:
+    knitr,
+    reticulate,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-GB
+Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.1
