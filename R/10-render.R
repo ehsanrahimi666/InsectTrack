@@ -76,15 +76,13 @@ render_frames <- function(sel, tr, workdir, offset = 0, tail = 2, colour = "trac
     lab <- paste(lab, unname(cl[as.character(d$track)]))
   }
   by_frame <- split(seq_len(nrow(d)), d$frame)
-  dev_type <- if (isTRUE(capabilities("cairo"))) "cairo" else NULL
   files <- character(nrow(sel))
   for (k in seq_len(nrow(sel))) {
     img <- it_read_frame(sel$file[k], gray = FALSE)
     H <- dim(img)[1]; W <- dim(img)[2]
     s <- max(0.8, W / 1280)
     files[k] <- file.path(workdir, sprintf("render_%07d.jpg", offset + k))
-    if (is.null(dev_type)) grDevices::jpeg(files[k], width = W, height = H, quality = quality)
-    else grDevices::jpeg(files[k], width = W, height = H, quality = quality, type = dev_type)
+    grDevices::jpeg(files[k], width = W, height = H, quality = quality)
     graphics::par(mar = c(0, 0, 0, 0))
     open_frame(W, H, img)
     draw_rois(rois, col = "white", lwd = 1.5 * s, lty = 2)
@@ -123,6 +121,9 @@ render_frames <- function(sel, tr, workdir, offset = 0, tail = 2, colour = "trac
       graphics::text(W * 0.01, H * 0.03, txt, adj = c(0, 0.5), col = "white", cex = cs)
     }
     grDevices::dev.off()
+    if (!file.exists(files[k]))
+      stop("the graphics device wrote no file ", files[k], "; set options(bitmapType = \"cairo\") and try again",
+           call. = FALSE)
   }
   files
 }

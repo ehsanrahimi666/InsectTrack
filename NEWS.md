@@ -21,3 +21,5 @@
 * `it_video_info()` reads WebM, Ogg and other files that are not MP4 or
   QuickTime without stopping at the rotation check.
 * `it_entrance_counts()` returns zero counts when there are no tracks.
+* Rendered frames and figures use the default bitmap device of the platform;
+  the cairo device forced before wrote no frames on macOS.

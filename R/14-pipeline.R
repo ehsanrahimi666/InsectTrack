@@ -295,7 +295,7 @@ it_track_video <- function(video, output_dir = NULL, detector = c("auto", "yolo"
   t0 <- Sys.time()
   bg <- if (file.exists(bg_file)) bg_file else NULL
   fig <- function(file, w, h, expr) {
-    grDevices::png(out(file), width = w, height = h, res = 150, type = if (isTRUE(capabilities("cairo"))) "cairo" else NULL)
+    grDevices::png(out(file), width = w, height = h, res = 150)
     on.exit(grDevices::dev.off())
     expr
   }
