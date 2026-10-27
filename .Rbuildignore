@@ -5,3 +5,5 @@
 ^\.Rproj\.user$
 ^docs$
 ^_pkgdown\.yml$
+^man/figures$
+^CITATION\.cff$

@@ -118,6 +118,40 @@ it_prelabel("hive.mp4", out_dir = "prelabels", n = 200, prompt = "bee")
 #   YOLO("yolo26n.pt").train(data = "bees.yaml", imgsz = 1280, epochs = 100)
 ```
 
+## Example: honeybees on flowers
+
+The package contains a 10-s video of honeybees visiting *Delosperma* flowers
+(`it_example_video()`) and the detections of this video by a YOLO26n bee
+detector (`it_example_detections()`), so that the steps after detection can
+be run without Python.
+
+```{r example-tracks, fig.width = 7, fig.height = 4}
+library(InsectTrack)
+v   <- it_example_video()
+it_video_info(v)
+det <- it_example_detections()
+tr  <- it_track(det, "bytetrack", track_thresh = 0.25, new_track_thresh = 0.3, frame_rate = 10)
+fr  <- it_extract_frames(v, gray = FALSE)
+bg  <- it_read_frame(fr$file[50], gray = FALSE)
+it_plot_tracks(tr, 640, 360, background = bg)
+```
+
+```{r example-summary, fig.width = 7, fig.height = 4}
+s <- it_track_summary(tr, width = 640, height = 360)
+s[, c("track", "n", "duration", "path_length", "mean_speed")]
+hm <- it_hotspots(it_heatmap(tr, 640, 360, cell = 16, frames = fr, smooth = 1))
+it_plot_heatmap(hm, background = bg)
+```
+
+The annotated video is written with
+
+```{r, eval = FALSE}
+it_render_video(fr, tr, "honeybees_tracked.mp4")
+```
+
+Tracked frames of other insects, with the sources and licences of their
+videos, are listed by `it_example_gallery()`.
+
 ## Step by step
 
 The steps of `it_track_video()` are available as separate functions.

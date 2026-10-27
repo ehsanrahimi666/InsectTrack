@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: "InsectTrack: Detection, Tracking and Activity Mapping of Insects in Videos"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: Rahimi
+    given-names: Ehsan
+    orcid: "https://orcid.org/0000-0002-8401-472X"
+  - family-names: Jung
+    given-names: Chuleui
+version: 0.1.0
+license: GPL-3.0-or-later
+repository-code: "https://github.com/ehsanrahimi666/InsectTrack"
+abstract: >-
+  An R package with an optional Python back end that detects insects in videos
+  with trained YOLO models, open-vocabulary detectors or background
+  subtraction, tracks them with multi-object trackers, and converts the tracks
+  into activity time series, heat maps and hot spots, visits to regions,
+  entrance counts and interactions, with an annotated video in which every
+  insect has its own colour and identity label.
+keywords:
+  - insect monitoring
+  - multi-object tracking
+  - video analysis
+  - pollinators
+  - R package

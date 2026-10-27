@@ -134,12 +134,14 @@ it_plot_activity <- function(act, what = c("mean_count", "max_count"), main = NU
            n_tracks = "Tracks present", n_new_tracks = "New tracks")
   y <- as.matrix(act[, what, drop = FALSE])
   x <- act$bin_start
-  op <- graphics::par(mar = c(4.2, 4.4, if (is.null(main)) 1 else 2.2, 1))
+  op <- graphics::par(mar = c(4.2, 4.4, if (is.null(main)) 2.2 else 3.6, 1))
   on.exit(graphics::par(op))
   graphics::matplot(x, y, type = "l", lty = 1, lwd = 2, col = col[seq_along(what)], las = 1,
                     xlab = "Time (s)", ylab = "Insects", ylim = c(0, max(1, max(y, na.rm = TRUE))))
-  graphics::legend("topleft", legend = lab[what], col = col[seq_along(what)], lwd = 2, bty = "n", cex = 0.85)
-  if (!is.null(main)) graphics::title(main, cex.main = 1)
+  usr <- graphics::par("usr")
+  graphics::legend(mean(usr[1:2]), usr[4], legend = lab[what], col = col[seq_along(what)], lwd = 2, bty = "n",
+                   cex = 0.85, horiz = TRUE, xjust = 0.5, yjust = 0, xpd = TRUE)
+  if (!is.null(main)) graphics::title(main, cex.main = 1, line = 2)
   invisible(NULL)
 }
 
@@ -154,7 +156,7 @@ it_plot_activity <- function(act, what = c("mean_count", "max_count"), main = NU
 #' @export
 it_plot_entrance <- function(ec, main = NULL) {
   cn <- ec$counts
-  op <- graphics::par(mar = c(4.2, 4.4, if (is.null(main)) 1 else 2.2, 4.4))
+  op <- graphics::par(mar = c(4.2, 4.4, if (is.null(main)) 2.2 else 3.6, 4.4))
   on.exit(graphics::par(op))
   mx <- max(1, cn$n_in, cn$n_out)
   mid <- (cn$bin_start + cn$bin_end) / 2
@@ -166,12 +168,14 @@ it_plot_entrance <- function(ec, main = NULL) {
   graphics::rect(mid - wd / 2, -cn$n_out, mid + wd / 2, 0, col = "#e76f51", border = NA)
   net <- cumsum(cn$net)
   sc <- if (max(abs(net)) > 0) mx / max(abs(net)) else 1
-  graphics::lines(mid, net * sc, lwd = 2, col = "black")
+  graphics::lines(c(cn$bin_start[1], cn$bin_end), c(0, net) * sc, type = "s", lwd = 2, col = "black")
   ax <- pretty(c(-max(abs(net)), max(abs(net))))
   graphics::axis(4, at = ax * sc, labels = ax, las = 1)
   graphics::mtext("Cumulative net flow (in - out)", side = 4, line = 2.8, cex = 0.9)
-  graphics::legend("topleft", c("In", "Out", "Cumulative net"), fill = c("#2a9d8f", "#e76f51", NA),
-                   border = NA, lwd = c(NA, NA, 2), col = c(NA, NA, "black"), bty = "n", cex = 0.85)
-  if (!is.null(main)) graphics::title(main, cex.main = 1)
+  usr <- graphics::par("usr")
+  graphics::legend(mean(usr[1:2]), usr[4], c("In", "Out", "Cumulative net"), fill = c("#2a9d8f", "#e76f51", NA),
+                   border = NA, lwd = c(NA, NA, 2), col = c(NA, NA, "black"), bty = "n", cex = 0.85,
+                   horiz = TRUE, xjust = 0.5, yjust = 0, xpd = TRUE)
+  if (!is.null(main)) graphics::title(main, cex.main = 1, line = 2)
   invisible(NULL)
 }

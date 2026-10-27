@@ -1,0 +1,13 @@
+test_that("the example video, detections and gallery are available", {
+  v <- it_example_video()
+  expect_true(file.exists(v))
+  det <- it_example_detections()
+  expect_true(all(c("frame", "time", "x", "y", "x0", "y0", "x1", "y1", "conf", "class") %in% names(det)))
+  expect_equal(length(unique(det$frame)), 100)
+  tr <- it_track(det, "bytetrack", track_thresh = 0.25, new_track_thresh = 0.3, frame_rate = 10)
+  expect_gt(length(unique(stats::na.omit(tr$track))), 0)
+  g <- it_example_gallery()
+  expect_equal(nrow(g), 8)
+  expect_true(all(file.exists(g$path)))
+  expect_true(all(grepl("^(CC0|CC BY|Public domain)", g$licence)))
+})

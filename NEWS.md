@@ -23,3 +23,8 @@
 * `it_entrance_counts()` returns zero counts when there are no tracks.
 * Rendered frames and figures use the default bitmap device of the platform;
   the cairo device forced before wrote no frames on macOS.
+* Example data: a 10-s video of honeybees on flowers (`it_example_video()`),
+  its detections (`it_example_detections()`) and tracked frames of eight
+  demonstration videos with their licences (`it_example_gallery()`).
+* Legends of `it_plot_activity()` and `it_plot_entrance()` are placed above
+  the plot, and the cumulative net flow is drawn as steps.
