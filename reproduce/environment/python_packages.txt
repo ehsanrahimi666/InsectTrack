@@ -1,0 +1,25 @@
+accelerate                 1.15.0
+boxmot                     25.0.0
+motmetrics                 1.4.0
+numpy                      2.5.3
+onnxruntime                1.29.0
+opencv-python              4.14.0.94
+pillow                     12.3.0
+py7zr                      1.1.4
+PyYAML                     6.0.3
+safetensors                0.8.0
+scipy                      1.18.1
+tokenizers                 0.23.3
+torch                      2.14.1+cpu
+torchvision                0.29.1+cpu
+transformers               5.20.2
+ultralytics                8.4.189
+Python 3.13.17
+model IDEA-Research/grounding-dino-base revision 12bdfa3120f3e7ec7b434d90674b3396eccf88eb
+model IDEA-Research/grounding-dino-tiny revision a2bb814dd30d776dcf7e30523b00659f4f141c71
+model facebook/sam2.1-hiera-base-plus revision b7320756a13354e7530a63935656d35b2f91a290
+model facebook/sam2.1-hiera-tiny revision de431c4043854a71d8101e17995dfe596bf101a5
+model google/owlv2-base-patch16-ensemble revision cfd3195ba4ea9592eec887ded089f4c08eff231d
+model google/owlvit-base-patch16 revision 4b420debb9c806fc4caf9ecc8efb72208c0db892
+model google/owlvit-base-patch16 revision 10e84248055232dfc4786bfead6206c3128d95ad
+model google/owlvit-base-patch32 revision cbc355fb364588351c5d51c7f74465e8e7ec6f72

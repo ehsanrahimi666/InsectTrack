@@ -1,0 +1,142 @@
+# Analysis specification for the feasibility assessment of the InsectTrack
+# prototype (version 0.0.1). Read by analysis/*.R. Pixel values refer to the
+# analysis resolution of each video; times are in seconds unless stated.
+
+seed: 20261026
+
+# Second detection variant evaluated on all data sets: per-pixel threshold of
+# k_pixel times the temporal variability of the background frames
+variant_k_pixel: 4
+
+criteria:
+  # Planned thresholds for calling a component adequate for ecological use
+  detection_f1: 0.80
+  tracking_mota: 0.70
+  tracking_idf1: 0.70
+
+paths:
+  clips: data/derived/clips
+  delosperma: data/raw/delosperma
+  melipona: data/derived/melipona/2026_03_06_MOTA
+  native_bee: data/derived/native_bee/data/tracking/clean_tracking
+  polytrack_zip: data/raw/validation/insect_trajectory_dataset.zip
+  output: output
+
+# Example videos from Wikimedia Commons, re-encoded to analysis clips
+# (see data/raw/web_videos/video_sources.csv). Zones are polygons x, y.
+web_videos:
+  V01:
+    scenario: Honeybee hive entrance, flight traffic
+    clip: V01_clip.mp4
+    detect: {k: 5, min_threshold: 15, blur: 1, close: 1, min_area: 15, max_area: 3000, bg_frames: 31, merge_dist: 10}
+    track: {gate: 40, max_speed: 0, max_gap: 0.4, min_length: 5}
+    stitch: {max_gap: 1.0, max_dist: 60}
+    zones:
+      entrance: {"x": [520, 590, 760, 790, 700, 560], "y": [460, 400, 370, 400, 450, 480]}
+    heatmap: {cell: 16, smooth: 1}
+    interaction_dist: null
+    render: {from: 0, to: 20, tail: 1.5}
+  V02:
+    scenario: Apiary, three hive entrances
+    clip: V02_clip.mp4
+    detect: {k: 5, min_threshold: 15, blur: 1, close: 1, min_area: 8, max_area: 2000, bg_frames: 31, merge_dist: 8}
+    track: {gate: 35, max_speed: 0, max_gap: 0.4, min_length: 5}
+    stitch: {max_gap: 1.0, max_dist: 50}
+    zones:
+      hive_left: {"x": [0, 215, 215, 0], "y": [430, 430, 500, 500]}
+      hive_middle: {"x": [400, 885, 885, 400], "y": [395, 395, 505, 505]}
+      hive_right: {"x": [1075, 1270, 1270, 1075], "y": [430, 430, 505, 505]}
+    heatmap: {cell: 16, smooth: 1}
+    interaction_dist: null
+    render: {from: 0, to: 20, tail: 1.5}
+  V03:
+    scenario: Social wasp (Vespula) ground-nest entrance
+    clip: V03_clip.mp4
+    detect: {k: 5, min_threshold: 15, blur: 1, close: 1, min_area: 30, max_area: 6000, bg_frames: 31, merge_dist: 15}
+    track: {gate: 50, max_speed: 0, max_gap: 0.4, min_length: 5}
+    stitch: {max_gap: 1.0, max_dist: 70}
+    zones:
+      nest_hole: {ellipse: [498, 363, 188, 190]}
+    heatmap: {cell: 16, smooth: 1}
+    interaction_dist: null
+    render: {from: 0, to: 20, tail: 1.5}
+  V04:
+    scenario: Hornet (Vespa crabro) queen at a founding nest
+    clip: V04_clip.mp4
+    detect: {k: 5, min_threshold: 15, blur: 1, close: 2, min_area: 200, max_area: 30000, bg_frames: 31, merge_dist: 40}
+    track: {gate: 80, max_speed: 0, max_gap: 1.0, min_length: 5}
+    stitch: {max_gap: 2.0, max_dist: 100}
+    zones:
+      nest: {ellipse: [415, 300, 200, 170]}
+    heatmap: {cell: 12, smooth: 1}
+    interaction_dist: null
+    render: {from: 0, to: 30, tail: 3}
+  V05:
+    scenario: Social wasps (Vespula) feeding at a honey bait
+    clip: V05_clip.mp4
+    detect: {k: 5, min_threshold: 15, blur: 1, close: 2, min_area: 500, max_area: 60000, bg_frames: 31, merge_dist: 60}
+    track: {gate: 80, max_speed: 0, max_gap: 1.0, min_length: 5}
+    stitch: {max_gap: 2.0, max_dist: 100}
+    zones:
+      bait: {ellipse: [450, 290, 170, 180]}
+    heatmap: {cell: 12, smooth: 1}
+    interaction_dist: 150
+    render: {from: 0, to: 30, tail: 3}
+  V08:
+    scenario: Harvester ants (Pogonomyrmex) at a nest entrance
+    clip: V08_clip.mp4
+    detect: {k: 5, min_threshold: 15, blur: 1, close: 1, min_area: 6, max_area: 600, bg_frames: 31, merge_dist: 6}
+    track: {gate: 25, max_speed: 0, max_gap: 1.0, min_length: 5}
+    stitch: {max_gap: 2.0, max_dist: 30}
+    zones:
+      nest_entrance: {ellipse: [525, 245, 50, 50]}
+    heatmap: {cell: 12, smooth: 1}
+    interaction_dist: null
+    render: {from: 0, to: 30, tail: 3}
+
+stability:
+  # Videos checked for camera movement (V06 and V07 were hand-held)
+  clips: [V01_clip.mp4, V02_clip.mp4, V03_clip.mp4, V04_clip.mp4, V05_clip.mp4, V08_clip.mp4, V06_clip.mp4, V07_clip.mp4]
+  pairs: 20
+  lag_s: 0.4
+  tolerance_px: 2
+
+# Honeybees on Delosperma (smartphone video, 1920 x 1080; clip of original
+# frames 14700-18173 at every third frame plus annotated frames, 1280 x 720)
+delosperma:
+  clip: delosperma_clip.mp4
+  clip_frames: delosperma_clip_frames.csv
+  scale_to_clip: 0.6666666667
+  detect: {k: 5, min_threshold: 15, blur: 1, close: 1, min_area: 8, max_area: 1500, bg_frames: 31, merge_dist: 8}
+  eval_max_dist: 10          # pixels at 1280 x 720 (bee length about 13 px)
+  yolo_conf_min: 0.30
+  yolo_track: {gate: 40, max_speed: 0, max_gap: 1.0, min_length: 3}   # pixels at 1920 x 1080
+  stitch: {max_gap: 2.0, max_dist: 60}
+  heatmap: {cell: 20, smooth: 1}
+  hotspot_radius: 2
+  render: {from: 0, to: 30, tail: 3}
+
+# Stingless bee hive entrance with MOTChallenge ground truth (Melipona
+# capixaba; 10-s sequences at 120 and 30 frames per second)
+melipona:
+  max_dist: 20               # matching distance, pixels (bee boxes 32-47 px)
+  detect: {k: 5, min_threshold: 15, blur: 1, close: 1, min_area: 100, max_area: 6000, bg_frames: 31, merge_dist: 20}
+  track: {gate: 30, max_speed: 600, max_gap: 0.25, min_length: 3}
+  stitch: {max_gap: 0.5, max_dist: 40, max_speed: 600}
+  sensitivity:            # detector variants on the 30-fps sequences, tracker variants on all
+    k: [3, 7]
+    min_area_factor: [0.5, 2]
+    gate_factor: [0.5, 2]
+    max_gap_factor: [0.5, 2]
+
+# Native stingless bees (Australia): frames with masked static background;
+# used for tracking from annotated positions only (association test)
+native_bee:
+  max_dist: 25
+  track: {gate: 60, max_speed: 0, max_gap: 5, min_length: 3}   # time unit: frames
+  stitch: {max_gap: 15, max_dist: 80}
+
+# Polytrack trajectories (strawberry farm): independent check of flower visits
+polytrack:
+  flower_polygon_vertices: 64
+  heatmap: {cell: 40}

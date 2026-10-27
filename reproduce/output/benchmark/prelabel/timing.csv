@@ -1,0 +1,9 @@
+configuration,frames,median_s_per_frame,mean_s_per_frame
+gdino_tiny_800,157,6.81,6.84
+gdino_tiny_512,157,2.558,2.596
+gdino_tiny_800_insect,157,7.089,7.131
+owlvit_b32,157,0.733,0.742
+yolo_bee_1280,157,0.259,0.262
+gdino_base_800,157,7.884,7.971
+owlv2_base,157,6.63,6.657
+sam2_refine,152,2.439,2.509

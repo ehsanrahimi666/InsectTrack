@@ -1,0 +1,322 @@
+key,value,source,definition
+n_exported,55,package/InsectTrack/NAMESPACE,exported functions
+n_boxmot_trackers,9,inst/python/insecttrack_backend.py,BoxMOT trackers callable from R
+n_trackers,12,inst/python/insecttrack_backend.py; R/05-track.R,trackers (3 in R + BoxMOT)
+n_test_pass,111,logs/testthat_results.txt,passing test expectations
+n_test_fail,0,logs/testthat_results.txt,failing test expectations
+n_test_skip,0,logs/testthat_results.txt,skipped test expectations (Python back end absent)
+n_test_files,9,package/InsectTrack/tests/testthat,test files
+mel120_seq,7,output/benchmark/tracking/metrics_pooled.csv,"sequences, melipona 120fps"
+mel120_boxes,"10,927",output/benchmark/tracking/metrics_pooled.csv,"annotated boxes, melipona 120fps"
+mel120_tracks,60,output/benchmark/tracking/metrics_pooled.csv,"annotated tracks, melipona 120fps"
+mel30_seq,5,output/benchmark/tracking/metrics_pooled.csv,"sequences, melipona 30fps"
+mel30_boxes,"2,072",output/benchmark/tracking/metrics_pooled.csv,"annotated boxes, melipona 30fps"
+mel30_tracks,32,output/benchmark/tracking/metrics_pooled.csv,"annotated tracks, melipona 30fps"
+nat_seq,16,output/benchmark/tracking/metrics_pooled.csv,"sequences, native_bee all"
+nat_boxes,"5,544",output/benchmark/tracking/metrics_pooled.csv,"annotated boxes, native_bee all"
+nat_tracks,198,output/benchmark/tracking/metrics_pooled.csv,"annotated tracks, native_bee all"
+mel120_frames,"8,400",analysis/10_tracking_common.R (seq_frames),"frames, Melipona 120 fps (10-s sequences)"
+mel30_frames,"1,500",analysis/10_tracking_common.R (seq_frames),"frames, Melipona 30 fps (10-s sequences)"
+nat_frames,"3,545",data/derived/native_bee/data/tracking/clean_tracking,annotated native-bee frames
+nat_fps,25,config/benchmark.yaml,native-bee frame rate
+fr_seq,5,output/benchmark/frame_rate/frame_rate_by_sequence.csv,sequences annotated at all six frame rates
+fr_rates,"30, 40, 50, 60, 100, 120",output/benchmark/frame_rate/frame_rate_by_sequence.csv,frame rates
+fr_boxes_range,"2,072–8,525",output/benchmark/frame_rate/frame_rate_by_sequence.csv,annotated boxes per frame rate (lowest and highest rate)
+fr_frames_range,"1,500–6,000",analysis/20_frame_rate.R,frames per frame rate (10-s sequences)
+pl_frames,157,output/benchmark/prelabel/frames.csv,pre-labelling frames
+pl_boxes,396,output/benchmark/prelabel/gt.csv,annotated boxes in pre-labelling frames
+pl_del_frames,33,output/benchmark/prelabel/frames.csv,"frames, delosperma"
+pl_del_boxes,98,output/benchmark/prelabel/gt.csv,"boxes, delosperma"
+pl_mel_frames,60,output/benchmark/prelabel/frames.csv,"frames, melipona"
+pl_mel_boxes,89,output/benchmark/prelabel/gt.csv,"boxes, melipona"
+pl_nat_frames,64,output/benchmark/prelabel/frames.csv,"frames, native_bee"
+pl_nat_boxes,209,output/benchmark/prelabel/gt.csv,"boxes, native_bee"
+pl_del_boxw,14,"output/benchmark/prelabel/gt.csv, frames.csv","median box width (px at 1280 px frame width), delosperma"
+pl_mel_boxw,32,"output/benchmark/prelabel/gt.csv, frames.csv","median box width (px at 1280 px frame width), melipona"
+pl_nat_boxw,43,"output/benchmark/prelabel/gt.csv, frames.csv","median box width (px at 1280 px frame width), native_bee"
+demo_videos,20,output/demo/demo_gallery.csv,demonstration videos (primary runs)
+demo_runs,23,output/demo/demo_gallery.csv,runs including variants
+demo_variants,3,output/demo/demo_gallery.csv,additional runs
+demo_gdino,15,output/demo/demo_gallery.csv,primary runs with gdino
+demo_motion,3,output/demo/demo_gallery.csv,primary runs with motion
+demo_yolo,2,output/demo/demo_gallery.csv,primary runs with yolo
+demo_frames,"5,915",output/demo/demo_gallery.csv,"frames analysed, all runs"
+demo_tracks_range,0–1251,output/demo/demo_gallery.csv,tracks per video (primary)
+demo_gdino_found,14,output/demo/demo_gallery.csv,primary Grounding DINO runs with at least one track
+demo_gdino_s_per_frame,4.7–23.8,output/demo/demo_gallery.csv,"run time per analysed frame, Grounding DINO base (whole pipeline, CPU)"
+demo_gdino_s_per_frame_median,6.5,output/demo/demo_gallery.csv,"median run time per analysed frame, Grounding DINO base"
+tracks_bee_counter,0,output/demo/demo_gallery.csv,"tracks, bee_counter"
+tracks_bee_counter_tiled,13,output/demo/demo_gallery.csv,"tracks, bee_counter_tiled"
+tracks_ant_trail,601,output/demo/demo_gallery.csv,"tracks, ant_trail"
+tracks_leafcutter_ants,"1,251",output/demo/demo_gallery.csv,"tracks, leafcutter_ants"
+tracks_leafcutter_ants_gdino,21,output/demo/demo_gallery.csv,"tracks, leafcutter_ants_gdino"
+tracks_drosophila_arena,98,output/demo/demo_gallery.csv,"tracks, drosophila_arena"
+tracks_drosophila_arena_gdino,3,output/demo/demo_gallery.csv,"tracks, drosophila_arena_gdino"
+tracks_hive_fanning,80,output/demo/demo_gallery.csv,"tracks, hive_fanning"
+tracks_hive_entrance,55,output/demo/demo_gallery.csv,"tracks, hive_entrance"
+tracks_hive_flight,57,output/demo/demo_gallery.csv,"tracks, hive_flight"
+tracks_delosperma,35,output/demo/demo_gallery.csv,"tracks, delosperma"
+tracks_melipona,36,output/demo/demo_gallery.csv,"tracks, melipona"
+in_hive_entrance,1,output/demo/demo_summary.csv,"insects in, hive_entrance"
+out_hive_entrance,0,output/demo/demo_summary.csv,"insects out, hive_entrance"
+in_hive_flight,1,output/demo/demo_summary.csv,"insects in, hive_flight"
+out_hive_flight,0,output/demo/demo_summary.csv,"insects out, hive_flight"
+in_melipona,2,output/demo/demo_summary.csv,"insects in, melipona"
+out_melipona,1,output/demo/demo_summary.csv,"insects out, melipona"
+in_bee_counter_tiled,0,output/demo/demo_summary.csv,"insects in, bee_counter_tiled"
+out_bee_counter_tiled,0,output/demo/demo_summary.csv,"insects out, bee_counter_tiled"
+mean_insects_hive_fanning,23,output/demo/demo_summary.csv,"mean bees per frame, hive_fanning"
+max_insects_hive_fanning,29,output/demo/demo_summary.csv,"maximum bees per frame, hive_fanning"
+interactions_yellowjacket_honeybee,2,output/demo/demo_summary.csv,"interaction events, yellowjacket_honeybee"
+interactions_leafcutter_bees_sunflower,0,output/demo/demo_summary.csv,"interaction events, leafcutter_bees_sunflower"
+interactions_drosophila_arena_gdino,0,output/demo/demo_summary.csv,"interaction events, drosophila_arena_gdino"
+del_seconds,60,output/demo/delosperma/settings.json,seconds analysed
+del_fps,10,output/demo/delosperma/settings.json,analysis frame rate
+del_tracks,35,output/demo/delosperma/tracks.csv,tracks
+del_visits,49,output/demo/delosperma/visits_per_roi.csv,visits
+del_flowers_visited,38,output/demo/delosperma/visits_per_roi.csv,flowers visited
+del_flowers,141,output/demo/delosperma/visits_per_roi.csv,flowers outlined
+del_visit_median,3.1,output/demo/delosperma/visits.csv,median visit duration (s)
+del_visit_max,22.9,output/demo/delosperma/visits.csv,longest visit (s)
+del_mean_bees,3.2,output/demo/delosperma/activity.csv,mean bees in view per frame
+del_maxn,6,output/demo/delosperma/activity.csv,largest MaxN in a 1-s bin
+del_hot_cells,244,output/demo/delosperma/heatmap.csv,hot-spot cells
+del_conf,0.10,output/demo/delosperma/settings.json,detection score threshold
+hota_mel120_gt,0.83–0.98,output/benchmark/tracking/metrics_pooled.csv,"hota range over trackers, melipona 120fps, ground_truth"
+deta_mel120_gt,0.95–1.00,output/benchmark/tracking/metrics_pooled.csv,"deta range over trackers, melipona 120fps, ground_truth"
+assa_mel120_gt,0.71–0.97,output/benchmark/tracking/metrics_pooled.csv,"assa range over trackers, melipona 120fps, ground_truth"
+idf1_mel120_gt,0.79–0.98,output/benchmark/tracking/metrics_pooled.csv,"idf1 range over trackers, melipona 120fps, ground_truth"
+mota_mel120_gt,0.95–1.00,output/benchmark/tracking/metrics_pooled.csv,"mota range over trackers, melipona 120fps, ground_truth"
+best_mel120_gt,boxmot_sfsort,output/benchmark/tracking/metrics_pooled.csv,"tracker with highest HOTA, melipona 120fps, ground_truth"
+besthota_mel120_gt,0.98,output/benchmark/tracking/metrics_pooled.csv,"highest HOTA, melipona 120fps, ground_truth"
+hota_mel120_ym,0.38–0.45,output/benchmark/tracking/metrics_pooled.csv,"hota range over trackers, melipona 120fps, yolo_melipona"
+deta_mel120_ym,0.33–0.41,output/benchmark/tracking/metrics_pooled.csv,"deta range over trackers, melipona 120fps, yolo_melipona"
+assa_mel120_ym,0.40–0.53,output/benchmark/tracking/metrics_pooled.csv,"assa range over trackers, melipona 120fps, yolo_melipona"
+idf1_mel120_ym,0.50–0.63,output/benchmark/tracking/metrics_pooled.csv,"idf1 range over trackers, melipona 120fps, yolo_melipona"
+mota_mel120_ym,0.23–0.49,output/benchmark/tracking/metrics_pooled.csv,"mota range over trackers, melipona 120fps, yolo_melipona"
+best_mel120_ym,boxmot_bytetrack,output/benchmark/tracking/metrics_pooled.csv,"tracker with highest HOTA, melipona 120fps, yolo_melipona"
+besthota_mel120_ym,0.45,output/benchmark/tracking/metrics_pooled.csv,"highest HOTA, melipona 120fps, yolo_melipona"
+hota_mel120_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"hota range over trackers, melipona 120fps, yolo_bee"
+deta_mel120_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"deta range over trackers, melipona 120fps, yolo_bee"
+assa_mel120_yb,0.00–0.01,output/benchmark/tracking/metrics_pooled.csv,"assa range over trackers, melipona 120fps, yolo_bee"
+idf1_mel120_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"idf1 range over trackers, melipona 120fps, yolo_bee"
+mota_mel120_yb,−4.74 to −1.10,output/benchmark/tracking/metrics_pooled.csv,"mota range over trackers, melipona 120fps, yolo_bee"
+best_mel120_yb,boxmot_boosttrack,output/benchmark/tracking/metrics_pooled.csv,"tracker with highest HOTA, melipona 120fps, yolo_bee"
+besthota_mel120_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"highest HOTA, melipona 120fps, yolo_bee"
+hota_mel30_gt,0.84–0.90,output/benchmark/tracking/metrics_pooled.csv,"hota range over trackers, melipona 30fps, ground_truth"
+deta_mel30_gt,0.89–1.00,output/benchmark/tracking/metrics_pooled.csv,"deta range over trackers, melipona 30fps, ground_truth"
+assa_mel30_gt,0.76–0.90,output/benchmark/tracking/metrics_pooled.csv,"assa range over trackers, melipona 30fps, ground_truth"
+idf1_mel30_gt,0.82–0.91,output/benchmark/tracking/metrics_pooled.csv,"idf1 range over trackers, melipona 30fps, ground_truth"
+mota_mel30_gt,0.89–0.94,output/benchmark/tracking/metrics_pooled.csv,"mota range over trackers, melipona 30fps, ground_truth"
+best_mel30_gt,boxmot_hybridsort,output/benchmark/tracking/metrics_pooled.csv,"tracker with highest HOTA, melipona 30fps, ground_truth"
+besthota_mel30_gt,0.90,output/benchmark/tracking/metrics_pooled.csv,"highest HOTA, melipona 30fps, ground_truth"
+hota_mel30_ym,0.32–0.40,output/benchmark/tracking/metrics_pooled.csv,"hota range over trackers, melipona 30fps, yolo_melipona"
+deta_mel30_ym,0.29–0.36,output/benchmark/tracking/metrics_pooled.csv,"deta range over trackers, melipona 30fps, yolo_melipona"
+assa_mel30_ym,0.32–0.48,output/benchmark/tracking/metrics_pooled.csv,"assa range over trackers, melipona 30fps, yolo_melipona"
+idf1_mel30_ym,0.42–0.54,output/benchmark/tracking/metrics_pooled.csv,"idf1 range over trackers, melipona 30fps, yolo_melipona"
+mota_mel30_ym,0.11–0.37,output/benchmark/tracking/metrics_pooled.csv,"mota range over trackers, melipona 30fps, yolo_melipona"
+best_mel30_ym,boxmot_botsort,output/benchmark/tracking/metrics_pooled.csv,"tracker with highest HOTA, melipona 30fps, yolo_melipona"
+besthota_mel30_ym,0.40,output/benchmark/tracking/metrics_pooled.csv,"highest HOTA, melipona 30fps, yolo_melipona"
+hota_mel30_gd,0.16–0.23,output/benchmark/tracking/metrics_pooled.csv,"hota range over trackers, melipona 30fps, gdino_tiny_512"
+deta_mel30_gd,0.08–0.18,output/benchmark/tracking/metrics_pooled.csv,"deta range over trackers, melipona 30fps, gdino_tiny_512"
+assa_mel30_gd,0.26–0.33,output/benchmark/tracking/metrics_pooled.csv,"assa range over trackers, melipona 30fps, gdino_tiny_512"
+idf1_mel30_gd,0.24–0.44,output/benchmark/tracking/metrics_pooled.csv,"idf1 range over trackers, melipona 30fps, gdino_tiny_512"
+mota_mel30_gd,−2.08 to 0.33,output/benchmark/tracking/metrics_pooled.csv,"mota range over trackers, melipona 30fps, gdino_tiny_512"
+best_mel30_gd,boxmot_botsort,output/benchmark/tracking/metrics_pooled.csv,"tracker with highest HOTA, melipona 30fps, gdino_tiny_512"
+besthota_mel30_gd,0.23,output/benchmark/tracking/metrics_pooled.csv,"highest HOTA, melipona 30fps, gdino_tiny_512"
+hota_mel30_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"hota range over trackers, melipona 30fps, yolo_bee"
+deta_mel30_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"deta range over trackers, melipona 30fps, yolo_bee"
+assa_mel30_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"assa range over trackers, melipona 30fps, yolo_bee"
+idf1_mel30_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"idf1 range over trackers, melipona 30fps, yolo_bee"
+mota_mel30_yb,−4.37 to −1.11,output/benchmark/tracking/metrics_pooled.csv,"mota range over trackers, melipona 30fps, yolo_bee"
+best_mel30_yb,native_sort,output/benchmark/tracking/metrics_pooled.csv,"tracker with highest HOTA, melipona 30fps, yolo_bee"
+besthota_mel30_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"highest HOTA, melipona 30fps, yolo_bee"
+hota_nat_gt,0.56–0.92,output/benchmark/tracking/metrics_pooled.csv,"hota range over trackers, native_bee all, ground_truth"
+deta_nat_gt,0.57–1.00,output/benchmark/tracking/metrics_pooled.csv,"deta range over trackers, native_bee all, ground_truth"
+assa_nat_gt,0.31–0.90,output/benchmark/tracking/metrics_pooled.csv,"assa range over trackers, native_bee all, ground_truth"
+idf1_nat_gt,0.41–0.91,output/benchmark/tracking/metrics_pooled.csv,"idf1 range over trackers, native_bee all, ground_truth"
+mota_nat_gt,0.57–0.95,output/benchmark/tracking/metrics_pooled.csv,"mota range over trackers, native_bee all, ground_truth"
+best_nat_gt,native_hungarian,output/benchmark/tracking/metrics_pooled.csv,"tracker with highest HOTA, native_bee all, ground_truth"
+besthota_nat_gt,0.92,output/benchmark/tracking/metrics_pooled.csv,"highest HOTA, native_bee all, ground_truth"
+hota_nat_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"hota range over trackers, native_bee all, yolo_bee"
+deta_nat_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"deta range over trackers, native_bee all, yolo_bee"
+assa_nat_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"assa range over trackers, native_bee all, yolo_bee"
+idf1_nat_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"idf1 range over trackers, native_bee all, yolo_bee"
+mota_nat_yb,−0.02 to 0.00,output/benchmark/tracking/metrics_pooled.csv,"mota range over trackers, native_bee all, yolo_bee"
+best_nat_yb,native_sort,output/benchmark/tracking/metrics_pooled.csv,"tracker with highest HOTA, native_bee all, yolo_bee"
+besthota_nat_yb,0.00,output/benchmark/tracking/metrics_pooled.csv,"highest HOTA, native_bee all, yolo_bee"
+hota_nat_gt_iou,0.56–0.63,output/benchmark/tracking/metrics_pooled.csv,"HOTA, native bees, annotated boxes, OC-SORT, Hybrid-SORT, BoostTrack, SFSORT"
+hota_nat_gt_other,0.89–0.92,output/benchmark/tracking/metrics_pooled.csv,"HOTA, native bees, annotated boxes, other trackers"
+assa_nat_gt_iou,0.31–0.66,output/benchmark/tracking/metrics_pooled.csv,"AssA, native bees, annotated boxes, IoU-only trackers"
+idsw_nat_sfsort,"1,241",output/benchmark/tracking/metrics_pooled.csv,"identity switches, native bees, annotated boxes, SFSORT"
+idsw_nat_other_max,37,output/benchmark/tracking/metrics_pooled.csv,"largest identity switches of other trackers, native bees"
+hota_mel120_gt_stitch,0.83,output/benchmark/tracking/metrics_pooled.csv,"HOTA, Melipona 120 fps, annotated boxes, ByteTrack + joining"
+hota_mel120_gt_bytetrack,0.92,output/benchmark/tracking/metrics_pooled.csv,"HOTA, Melipona 120 fps, annotated boxes, ByteTrack (R)"
+prec_mel120_ym,0.69,output/benchmark/tracking/detection_quality_by_sequence.csv,"precision (IoU >= 0.5), melipona 120fps, yolo_melipona"
+rec_mel120_ym,0.61,output/benchmark/tracking/detection_quality_by_sequence.csv,"recall (IoU >= 0.5), melipona 120fps, yolo_melipona"
+f1_mel120_ym,0.65,output/benchmark/tracking/detection_quality_by_sequence.csv,"F1 (IoU >= 0.5), melipona 120fps, yolo_melipona"
+npred_mel120_ym,"9,680",output/benchmark/tracking/detection_quality_by_sequence.csv,"detections above the threshold, melipona 120fps, yolo_melipona"
+prec_mel120_yb,0.00,output/benchmark/tracking/detection_quality_by_sequence.csv,"precision (IoU >= 0.5), melipona 120fps, yolo_bee"
+rec_mel120_yb,0.00,output/benchmark/tracking/detection_quality_by_sequence.csv,"recall (IoU >= 0.5), melipona 120fps, yolo_bee"
+f1_mel120_yb,0.00,output/benchmark/tracking/detection_quality_by_sequence.csv,"F1 (IoU >= 0.5), melipona 120fps, yolo_bee"
+npred_mel120_yb,"15,998",output/benchmark/tracking/detection_quality_by_sequence.csv,"detections above the threshold, melipona 120fps, yolo_bee"
+prec_mel30_ym,0.60,output/benchmark/tracking/detection_quality_by_sequence.csv,"precision (IoU >= 0.5), melipona 30fps, yolo_melipona"
+rec_mel30_ym,0.56,output/benchmark/tracking/detection_quality_by_sequence.csv,"recall (IoU >= 0.5), melipona 30fps, yolo_melipona"
+f1_mel30_ym,0.58,output/benchmark/tracking/detection_quality_by_sequence.csv,"F1 (IoU >= 0.5), melipona 30fps, yolo_melipona"
+npred_mel30_ym,"1,964",output/benchmark/tracking/detection_quality_by_sequence.csv,"detections above the threshold, melipona 30fps, yolo_melipona"
+prec_mel30_gd,0.25,output/benchmark/tracking/detection_quality_by_sequence.csv,"precision (IoU >= 0.5), melipona 30fps, gdino_tiny_512"
+rec_mel30_gd,0.20,output/benchmark/tracking/detection_quality_by_sequence.csv,"recall (IoU >= 0.5), melipona 30fps, gdino_tiny_512"
+f1_mel30_gd,0.22,output/benchmark/tracking/detection_quality_by_sequence.csv,"F1 (IoU >= 0.5), melipona 30fps, gdino_tiny_512"
+npred_mel30_gd,"1,702",output/benchmark/tracking/detection_quality_by_sequence.csv,"detections above the threshold, melipona 30fps, gdino_tiny_512"
+prec_mel30_yb,0.00,output/benchmark/tracking/detection_quality_by_sequence.csv,"precision (IoU >= 0.5), melipona 30fps, yolo_bee"
+rec_mel30_yb,0.00,output/benchmark/tracking/detection_quality_by_sequence.csv,"recall (IoU >= 0.5), melipona 30fps, yolo_bee"
+f1_mel30_yb,0.00,output/benchmark/tracking/detection_quality_by_sequence.csv,"F1 (IoU >= 0.5), melipona 30fps, yolo_bee"
+npred_mel30_yb,"3,408",output/benchmark/tracking/detection_quality_by_sequence.csv,"detections above the threshold, melipona 30fps, yolo_bee"
+prec_nat_yb,0.00,output/benchmark/tracking/detection_quality_by_sequence.csv,"precision (IoU >= 0.5), native_bee all, yolo_bee"
+rec_nat_yb,0.00,output/benchmark/tracking/detection_quality_by_sequence.csv,"recall (IoU >= 0.5), native_bee all, yolo_bee"
+f1_nat_yb,0.00,output/benchmark/tracking/detection_quality_by_sequence.csv,"F1 (IoU >= 0.5), native_bee all, yolo_bee"
+npred_nat_yb,150,output/benchmark/tracking/detection_quality_by_sequence.csv,"detections above the threshold, native_bee all, yolo_bee"
+speed_range,"435–8,799",output/benchmark/tracking/metrics_by_sequence.csv,"frames per second of tracking (annotated boxes, all sequences), range over trackers"
+speed_native_hungarian,"8,799",output/benchmark/tracking/metrics_by_sequence.csv,"frames per second, native_hungarian"
+speed_native_sort,"2,809",output/benchmark/tracking/metrics_by_sequence.csv,"frames per second, native_sort"
+speed_native_bytetrack,"1,548",output/benchmark/tracking/metrics_by_sequence.csv,"frames per second, native_bytetrack"
+speed_boxmot_bytetrack,435,output/benchmark/tracking/metrics_by_sequence.csv,"frames per second, boxmot_bytetrack"
+speed_boxmot_ocsort,510,output/benchmark/tracking/metrics_by_sequence.csv,"frames per second, boxmot_ocsort"
+xcheck_n,9,output/benchmark/xcheck_hota/hota_xcheck.csv,tracker-sequence results cross-checked
+xcheck_maxdiff,0,output/benchmark/xcheck_hota/hota_xcheck.csv,"largest absolute difference of HOTA, DetA, AssA, LocA between implementations"
+xcheck_decimals,5,output/benchmark/xcheck_hota/hota_xcheck.csv,decimal places stored in the cross-check
+crit_hota,0.60,config/benchmark.yaml,HOTA criterion
+crit_mota,0.70,config/benchmark.yaml,MOTA criterion
+crit_idf1,0.70,config/benchmark.yaml,IDF1 criterion
+crit_f1,0.80,config/benchmark.yaml,detection F1 criterion
+crit_inout,0.15,config/benchmark.yaml,in/out relative error criterion
+crit_met_inputs,ground_truth,output/benchmark/tracking/metrics_pooled.csv,inputs for which at least one tracker met all tracking criteria
+crit_n_mel120_gt,10,output/benchmark/tracking/metrics_pooled.csv,"trackers meeting all tracking criteria with annotated boxes, melipona 120fps"
+crit_n_mel30_gt,10,output/benchmark/tracking/metrics_pooled.csv,"trackers meeting all tracking criteria with annotated boxes, melipona 30fps"
+crit_n_nat_gt,6,output/benchmark/tracking/metrics_pooled.csv,"trackers meeting all tracking criteria with annotated boxes, native_bee all"
+crit_met_yolo,0,output/benchmark/tracking/metrics_pooled.csv,tracker-frame-rate combinations meeting the criteria with YOLO26n Melipona detections
+sens_thr06_drop,0.09,output/benchmark/tracking/sensitivity_bytetrack.csv,decrease of mean HOTA with detection threshold 0.6 (range over 120 and 30 fps)
+sens_thr04_change,0.01–0.04,output/benchmark/tracking/sensitivity_bytetrack.csv,change of mean HOTA with detection threshold 0.4 (range over 120 and 30 fps)
+sens_other_maxabs,0.01,output/benchmark/tracking/sensitivity_bytetrack.csv,largest absolute change of mean HOTA with track buffer or matching IoU
+sens_nat_max_hota,0.00,output/benchmark/tracking/sensitivity_bytetrack.csv,largest HOTA of any native-bee sensitivity run (detections of the bees-on-flowers model)
+zone_mel_radius,25,output/benchmark/tracking/entrance_zones.csv,"entrance zone radius, Melipona (px)"
+zone_nat_radius,40,output/benchmark/tracking/entrance_zones.csv,"entrance zone radius, native bees (px)"
+gtin_mel120,17,output/benchmark/tracking/metrics_pooled.csv,"annotated movements in, melipona 120fps"
+gtout_mel120,11,output/benchmark/tracking/metrics_pooled.csv,"annotated movements out, melipona 120fps"
+ioerr_mel120_gt,0.00–0.14,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, range over trackers, melipona 120fps, ground_truth"
+ioerr_med_mel120_gt,0.07,output/benchmark/tracking/metrics_pooled.csv,"median relative error of in + out counts over trackers, melipona 120fps, ground_truth"
+ioerr_mel120_ym,0.14–0.54,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, range over trackers, melipona 120fps, yolo_melipona"
+ioerr_med_mel120_ym,0.39,output/benchmark/tracking/metrics_pooled.csv,"median relative error of in + out counts over trackers, melipona 120fps, yolo_melipona"
+ioerr_mel120_yb,0.96–1.00,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, range over trackers, melipona 120fps, yolo_bee"
+ioerr_med_mel120_yb,1.00,output/benchmark/tracking/metrics_pooled.csv,"median relative error of in + out counts over trackers, melipona 120fps, yolo_bee"
+gtin_mel30,13,output/benchmark/tracking/metrics_pooled.csv,"annotated movements in, melipona 30fps"
+gtout_mel30,5,output/benchmark/tracking/metrics_pooled.csv,"annotated movements out, melipona 30fps"
+ioerr_mel30_gt,0.39–0.83,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, range over trackers, melipona 30fps, ground_truth"
+ioerr_med_mel30_gt,0.72,output/benchmark/tracking/metrics_pooled.csv,"median relative error of in + out counts over trackers, melipona 30fps, ground_truth"
+ioerr_mel30_ym,0.50–0.94,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, range over trackers, melipona 30fps, yolo_melipona"
+ioerr_med_mel30_ym,0.78,output/benchmark/tracking/metrics_pooled.csv,"median relative error of in + out counts over trackers, melipona 30fps, yolo_melipona"
+ioerr_mel30_gd,0.67–0.89,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, range over trackers, melipona 30fps, gdino_tiny_512"
+ioerr_med_mel30_gd,0.78,output/benchmark/tracking/metrics_pooled.csv,"median relative error of in + out counts over trackers, melipona 30fps, gdino_tiny_512"
+ioerr_mel30_yb,1.00,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, range over trackers, melipona 30fps, yolo_bee"
+ioerr_med_mel30_yb,1.00,output/benchmark/tracking/metrics_pooled.csv,"median relative error of in + out counts over trackers, melipona 30fps, yolo_bee"
+gtin_nat,5,output/benchmark/tracking/metrics_pooled.csv,"annotated movements in, native_bee all"
+gtout_nat,3,output/benchmark/tracking/metrics_pooled.csv,"annotated movements out, native_bee all"
+ioerr_nat_gt,0.25–0.62,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, range over trackers, native_bee all, ground_truth"
+ioerr_med_nat_gt,0.50,output/benchmark/tracking/metrics_pooled.csv,"median relative error of in + out counts over trackers, native_bee all, ground_truth"
+ioerr_nat_yb,1.00,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, range over trackers, native_bee all, yolo_bee"
+ioerr_med_nat_yb,1.00,output/benchmark/tracking/metrics_pooled.csv,"median relative error of in + out counts over trackers, native_bee all, yolo_bee"
+ioerr_120fps_gt_boxmot_boosttrack,0.07,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, Melipona 120fps, annotated boxes, boxmot_boosttrack"
+ioerr_30fps_gt_boxmot_boosttrack,0.83,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, Melipona 30fps, annotated boxes, boxmot_boosttrack"
+ioerr_120fps_gt_boxmot_sfsort,0.00,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, Melipona 120fps, annotated boxes, boxmot_sfsort"
+ioerr_30fps_gt_boxmot_sfsort,0.39,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, Melipona 30fps, annotated boxes, boxmot_sfsort"
+ioerr_120fps_gt_native_hungarian,0.14,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, Melipona 120fps, annotated boxes, native_hungarian"
+ioerr_30fps_gt_native_hungarian,0.72,output/benchmark/tracking/metrics_pooled.csv,"relative error of in + out counts, Melipona 30fps, annotated boxes, native_hungarian"
+ioerr_mel120_gt_ncrit,10,output/benchmark/tracking/metrics_pooled.csv,"trackers meeting the in/out criterion, Melipona 120 fps, annotated boxes"
+step_mel120,1.0,output/benchmark/tracking/inout_diagnostic_steps.csv,"median largest step between frames in body lengths, ('melipona', '120fps')"
+step_over1_mel120,46,output/benchmark/tracking/inout_diagnostic_steps.csv,"percentage of movements with a step longer than one body length, ('melipona', '120fps')"
+moves_mel120,28,output/benchmark/tracking/inout_diagnostic_steps.csv,"annotated movements, ('melipona', '120fps')"
+step_mel30,3.7,output/benchmark/tracking/inout_diagnostic_steps.csv,"median largest step between frames in body lengths, ('melipona', '30fps')"
+step_over1_mel30,94,output/benchmark/tracking/inout_diagnostic_steps.csv,"percentage of movements with a step longer than one body length, ('melipona', '30fps')"
+moves_mel30,18,output/benchmark/tracking/inout_diagnostic_steps.csv,"annotated movements, ('melipona', '30fps')"
+recov_mel120,18–96,output/benchmark/tracking/inout_diagnostic_events.csv,"percentage of annotated movements reproduced, Melipona 120 fps, range over trackers"
+recov_mel30,6–50,output/benchmark/tracking/inout_diagnostic_events.csv,"percentage of annotated movements reproduced, Melipona 30 fps, range over trackers"
+recov_mel120_boxmot_sfsort,96,output/benchmark/tracking/inout_diagnostic_events.csv,"percentage of movements reproduced, 120 fps, boxmot_sfsort"
+recov_mel30_boxmot_sfsort,50,output/benchmark/tracking/inout_diagnostic_events.csv,"percentage of movements reproduced, 30 fps, boxmot_sfsort"
+recov_mel120_native_hungarian,89,output/benchmark/tracking/inout_diagnostic_events.csv,"percentage of movements reproduced, 120 fps, native_hungarian"
+recov_mel30_native_hungarian,28,output/benchmark/tracking/inout_diagnostic_events.csv,"percentage of movements reproduced, 30 fps, native_hungarian"
+recov_mel120_native_bytetrack_stitch,79,output/benchmark/tracking/inout_diagnostic_events.csv,"percentage of movements reproduced, 120 fps, native_bytetrack_stitch"
+recov_mel30_native_bytetrack_stitch,33,output/benchmark/tracking/inout_diagnostic_events.csv,"percentage of movements reproduced, 30 fps, native_bytetrack_stitch"
+recov_mel120_boxmot_boosttrack,18,output/benchmark/tracking/inout_diagnostic_events.csv,"percentage of movements reproduced, 120 fps, boxmot_boosttrack"
+recov_mel30_boxmot_boosttrack,6,output/benchmark/tracking/inout_diagnostic_events.csv,"percentage of movements reproduced, 30 fps, boxmot_boosttrack"
+fr_err_30,0.72,output/benchmark/frame_rate/frame_rate_pooled.csv,median relative error of in + out counts over trackers at 30 fps
+fr_hota_30,0.86,output/benchmark/frame_rate/frame_rate_pooled.csv,median HOTA over trackers at 30 fps
+fr_err_40,0.72,output/benchmark/frame_rate/frame_rate_pooled.csv,median relative error of in + out counts over trackers at 40 fps
+fr_hota_40,0.84,output/benchmark/frame_rate/frame_rate_pooled.csv,median HOTA over trackers at 40 fps
+fr_err_50,0.67,output/benchmark/frame_rate/frame_rate_pooled.csv,median relative error of in + out counts over trackers at 50 fps
+fr_hota_50,0.88,output/benchmark/frame_rate/frame_rate_pooled.csv,median HOTA over trackers at 50 fps
+fr_err_60,0.61,output/benchmark/frame_rate/frame_rate_pooled.csv,median relative error of in + out counts over trackers at 60 fps
+fr_hota_60,0.88,output/benchmark/frame_rate/frame_rate_pooled.csv,median HOTA over trackers at 60 fps
+fr_err_100,0.39,output/benchmark/frame_rate/frame_rate_pooled.csv,median relative error of in + out counts over trackers at 100 fps
+fr_hota_100,0.93,output/benchmark/frame_rate/frame_rate_pooled.csv,median HOTA over trackers at 100 fps
+fr_err_120,0.11,output/benchmark/frame_rate/frame_rate_pooled.csv,median relative error of in + out counts over trackers at 120 fps
+fr_hota_120,0.94,output/benchmark/frame_rate/frame_rate_pooled.csv,median HOTA over trackers at 120 fps
+fr_hota_30_60,0.84–0.88,output/benchmark/frame_rate/frame_rate_pooled.csv,range of the median HOTA over trackers at 30-60 fps
+fr_err_30_60,0.61–0.72,output/benchmark/frame_rate/frame_rate_pooled.csv,range of the median relative count error over trackers at 30-60 fps
+fr_step_30,3.7,output/benchmark/frame_rate/frame_rate_movements.csv,median largest step in body lengths at 30 fps
+fr_step_40,2.6,output/benchmark/frame_rate/frame_rate_movements.csv,median largest step in body lengths at 40 fps
+fr_step_50,2.6,output/benchmark/frame_rate/frame_rate_movements.csv,median largest step in body lengths at 50 fps
+fr_step_60,1.9,output/benchmark/frame_rate/frame_rate_movements.csv,median largest step in body lengths at 60 fps
+fr_step_100,1.8,output/benchmark/frame_rate/frame_rate_movements.csv,median largest step in body lengths at 100 fps
+fr_step_120,1.0,output/benchmark/frame_rate/frame_rate_movements.csv,median largest step in body lengths at 120 fps
+fr_moves,18,output/benchmark/frame_rate/frame_rate_movements.csv,annotated movements per frame rate
+fr_gtin,13,output/benchmark/frame_rate/frame_rate_by_sequence.csv,"annotated movements in, frame-rate sequences"
+fr_gtout,5,output/benchmark/frame_rate/frame_rate_by_sequence.csv,"annotated movements out, frame-rate sequences"
+plf1_del_zs,0.00,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1 at default thresholds, Grounding DINO and OWLv2 configurations, delosperma"
+plf1_del_gd,0.00,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, Grounding DINO configurations, delosperma"
+plf1_del_owlvit,0.00,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, OWL-ViT, delosperma"
+plf1_del_owlv2,0.00,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, OWLv2, delosperma"
+plf1_del_yolo,0.76,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, YOLO26n bees on flowers, delosperma"
+plf1_mel_zs,0.09–0.49,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1 at default thresholds, Grounding DINO and OWLv2 configurations, melipona"
+plf1_mel_gd,0.35–0.49,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, Grounding DINO configurations, melipona"
+plf1_mel_owlvit,0.00,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, OWL-ViT, melipona"
+plf1_mel_owlv2,0.09,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, OWLv2, melipona"
+plf1_mel_yolo,0.00,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, YOLO26n bees on flowers, melipona"
+plf1_nat_zs,0.68–0.74,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1 at default thresholds, Grounding DINO and OWLv2 configurations, native_bee"
+plf1_nat_gd,0.68–0.69,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, Grounding DINO configurations, native_bee"
+plf1_nat_owlvit,0.13,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, OWL-ViT, native_bee"
+plf1_nat_owlv2,0.74,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, OWLv2, native_bee"
+plf1_nat_yolo,0.00,output/benchmark/prelabel/prelabel_metrics_by_threshold.csv,"F1, YOLO26n bees on flowers, native_bee"
+plap_nat_zs,0.62–0.70,output/benchmark/prelabel/prelabel_ap50.csv,"AP50, zero-shot, native bees"
+plap_mel_zs,0.10–0.44,output/benchmark/prelabel/prelabel_ap50.csv,"AP50, zero-shot, Melipona"
+plap_del_yolo,0.76,output/benchmark/prelabel/prelabel_ap50.csv,"AP50, YOLO, Delosperma"
+pl_correct_share,6–12,output/benchmark/prelabel/prelabel_workload.csv,"percentage of annotated boxes matched by a pre-label that needs no change (IoU >= 0.75), zero-shot, all data"
+pl_correct_share_nat,8–19,output/benchmark/prelabel/prelabel_workload.csv,"percentage of boxes needing no change, zero-shot, native bees"
+pl_adjust_nat,50–64,output/benchmark/prelabel/prelabel_workload.csv,"percentage of boxes found but needing adjustment, zero-shot, native bees"
+pl_add_nat,28–32,output/benchmark/prelabel/prelabel_workload.csv,"percentage of boxes to add (missed), zero-shot, native bees"
+sam_iou_before_nat,0.65,output/benchmark/prelabel/sam2_refinement.csv,"mean IoU before SAM 2.1, native_bee"
+sam_iou_after_nat,0.69,output/benchmark/prelabel/sam2_refinement.csv,"mean IoU after SAM 2.1, native_bee"
+sam_tp_before_nat,144,output/benchmark/prelabel/sam2_refinement.csv,"matched boxes before, native_bee"
+sam_tp_after_nat,153,output/benchmark/prelabel/sam2_refinement.csv,"matched boxes after, native_bee"
+sam_iou_before_mel,0.70,output/benchmark/prelabel/sam2_refinement.csv,"mean IoU before SAM 2.1, melipona"
+sam_iou_after_mel,0.72,output/benchmark/prelabel/sam2_refinement.csv,"mean IoU after SAM 2.1, melipona"
+sam_tp_before_mel,38,output/benchmark/prelabel/sam2_refinement.csv,"matched boxes before, melipona"
+sam_tp_after_mel,37,output/benchmark/prelabel/sam2_refinement.csv,"matched boxes after, melipona"
+sam_iou_before_all,0.66,output/benchmark/prelabel/sam2_refinement.csv,"mean IoU before SAM 2.1, all"
+sam_iou_after_all,0.70,output/benchmark/prelabel/sam2_refinement.csv,"mean IoU after SAM 2.1, all"
+sam_tp_before_all,182,output/benchmark/prelabel/sam2_refinement.csv,"matched boxes before, all"
+sam_tp_after_all,190,output/benchmark/prelabel/sam2_refinement.csv,"matched boxes after, all"
+sam_bodylen_nat,54,output/benchmark/prelabel/sam2_refinement.csv,"median SAM 2.1 body length, native bees (px)"
+time_gdino_tiny_800,6.8,output/benchmark/prelabel/timing.csv,"median CPU time per frame (2 threads), gdino_tiny_800"
+time_gdino_tiny_512,2.6,output/benchmark/prelabel/timing.csv,"median CPU time per frame (2 threads), gdino_tiny_512"
+time_gdino_tiny_800_insect,7.1,output/benchmark/prelabel/timing.csv,"median CPU time per frame (2 threads), gdino_tiny_800_insect"
+time_owlvit_b32,0.73,output/benchmark/prelabel/timing.csv,"median CPU time per frame (2 threads), owlvit_b32"
+time_yolo_bee_1280,0.26,output/benchmark/prelabel/timing.csv,"median CPU time per frame (2 threads), yolo_bee_1280"
+time_gdino_base_800,7.9,output/benchmark/prelabel/timing.csv,"median CPU time per frame (2 threads), gdino_base_800"
+time_owlv2_base,6.6,output/benchmark/prelabel/timing.csv,"median CPU time per frame (2 threads), owlv2_base"
+time_sam2_refine,2.4,output/benchmark/prelabel/timing.csv,"median CPU time per frame (2 threads), sam2_refine"
+time_gdino_range,2.6–7.9,output/benchmark/prelabel/timing.csv,"CPU time per frame, Grounding DINO configurations"
+threads,2,config/benchmark.yaml,CPU threads
+bf16_frames,10,output/benchmark/prelabel/fp32_vs_bf16.csv,frames in the bfloat16 check
+bf16_matched,23 of 25,output/benchmark/prelabel/fp32_vs_bf16.csv,float32 boxes matched by bfloat16 boxes
+bf16_iou,0.90,output/benchmark/prelabel/fp32_vs_bf16.csv,"mean IoU of matched boxes, bfloat16 vs float32"
+bf16_scorediff,0.01,output/benchmark/prelabel/fp32_vs_bf16.csv,"mean absolute score difference, bfloat16 vs float32"

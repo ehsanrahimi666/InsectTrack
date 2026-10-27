@@ -1,0 +1,153 @@
+# Analysis specification for the detector, tracker and pre-labelling
+# benchmarks and the demonstration videos of InsectTrack 0.1.0.
+# Read by analysis/1x_*.R and analysis/1x_*.py. Pixel values refer to the
+# resolution of the frames analysed; times are in seconds unless stated.
+
+seed: 20261026
+threads: 2
+
+models:
+  gdino_tiny: IDEA-Research/grounding-dino-tiny
+  gdino_base: IDEA-Research/grounding-dino-base
+  owlv2: google/owlv2-base-patch16-ensemble
+  owlvit_b32: google/owlvit-base-patch32
+  sam2_tiny: facebook/sam2.1-hiera-tiny
+  sam2_base: facebook/sam2.1-hiera-base-plus
+  # honeybee detector trained by the author (single class 'bee')
+  yolo_bee: data/derived/models/flower333_yolo26n_deploy.pt
+  # stingless-bee detector released with the Melipona data set (ONNX export)
+  yolo_melipona: data/raw/validation/melipona_yolo26n_fp32.onnx
+  # model files are cached by Hugging Face Hub (HF_HUB_CACHE)
+
+paths:
+  melipona: data/derived/melipona/2026_03_06_MOTA
+  native_bee: data/derived/native_bee/data/tracking/clean_tracking
+  delosperma_labels: data/raw/delosperma/annotations
+  delosperma_clip: data/derived/clips/delosperma_clip.mp4
+  delosperma_clip_frames: data/derived/clips/delosperma_clip_frames.csv
+  output: output
+
+# All detections with a score of at least min_score are stored, so that
+# score thresholds can be applied afterwards without re-running the models.
+detection:
+  min_score: 0.05
+  primary_threshold: {gdino: 0.30, owlv2: 0.15, yolo: 0.25}
+  threshold_grid: [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.60, 0.70]
+  nms_iou: 0.5
+  max_box_frac: 0.25
+
+# Zero-shot pre-labelling against annotated frames
+prelabel:
+  frames:
+    delosperma: all          # the 33 annotated frames (98 bees)
+    melipona: 5              # per sequence, evenly spaced among frames with ground truth
+    native_bee: 4            # per sequence, evenly spaced
+  configurations:
+    - {name: gdino_tiny_800, detector: gdino, model: gdino_tiny, prompt: bee, shortest_edge: 800, bf16: true}
+    - {name: gdino_tiny_512, detector: gdino, model: gdino_tiny, prompt: bee, shortest_edge: 512, bf16: true}
+    - {name: gdino_base_800, detector: gdino, model: gdino_base, prompt: bee, shortest_edge: 800, bf16: true}
+    - {name: gdino_tiny_800_insect, detector: gdino, model: gdino_tiny, prompt: insect, shortest_edge: 800, bf16: true}
+    - {name: owlv2_base, detector: owl, model: owlv2, prompt: bee}
+    - {name: owlvit_b32, detector: owl, model: owlvit_b32, prompt: bee}
+    - {name: yolo_bee_1280, detector: yolo, model: yolo_bee, imgsz: 1280}
+  # SAM 2.1 refines the boxes of this configuration at its primary threshold
+  sam2_refine: {configuration: gdino_tiny_800, model: sam2_tiny}
+  match_iou: 0.5
+  adjust_iou: 0.75           # matched boxes below this IoU count as boxes to adjust
+  # bf16 agreement check on a subset: same frames with bf16 off
+  fp32_check: {configuration: gdino_tiny_800, frames: 10}
+
+# Multi-object tracking benchmark
+tracking:
+  datasets: [melipona, native_bee]
+  inputs:
+    melipona: [ground_truth, yolo_melipona, yolo_bee, gdino_tiny_512]
+    native_bee: [ground_truth, yolo_bee]
+  gdino_sequences: 30fps      # zero-shot detection only on the 30 fps Melipona sequences
+  # frame rate of the native-bee footage given in the data set record (25 frames per second);
+  # the image sequences are consecutive frames of this footage with frames without bees removed
+  frame_rate: {native_bee: 25}
+  # the Melipona model was exported with a fixed 640 x 640 input
+  yolo: {imgsz: {yolo_melipona: 640, yolo_bee: 1280}, min_score: 0.05}
+  gdino: {shortest_edge: 512, bf16: true, prompt: bee}
+  # Score thresholds per detection input: 'high' is the single threshold of
+  # trackers without a second association (Hungarian, SORT, OC-SORT) and the
+  # first-association threshold of ByteTrack-type trackers, 'low' the lower
+  # bound of their second association and 'new' the minimum score of a new
+  # track. They are passed to the equivalent arguments of every tracker.
+  thresholds:
+    ground_truth: {high: 0.5, low: 0.1, new: 0.6}
+    yolo_melipona: {high: 0.25, low: 0.1, new: 0.35}
+    yolo_bee: {high: 0.25, low: 0.1, new: 0.35}
+    gdino_tiny_512: {high: 0.30, low: 0.15, new: 0.40}
+  trackers:
+    native_hungarian: {gate: 40, max_gap: 0.5, min_length: 3, velocity_weight: 0.6}
+    native_sort: {iou_min: 0.3, min_hits: 3, max_age: 30}
+    native_bytetrack: {match_iou: 0.2, second_match_iou: 0.5, track_buffer: 30}
+    boxmot_bytetrack: {}
+    boxmot_ocsort: {}
+    boxmot_botsort: {use_embeddings: false, use_cmc: false}
+    boxmot_boosttrack: {use_embeddings: false, use_cmc: false}
+    boxmot_sfsort: {}
+    boxmot_hybridsort: {use_embeddings: false, with_longterm_reid: false}
+  # trackers that need frame rates: frame_rate is set to the sequence frame rate
+  max_dist: {melipona: 20, native_bee: 25}   # centre-distance matching for MOTA and IDF1
+  hota_similarity: iou
+  sensitivity:
+    native_bytetrack:
+      track_thresh: [0.4, 0.6]
+      track_buffer: [15, 60]
+      match_iou: [0.1, 0.3]
+
+# Hive-entrance in/out counts
+in_out:
+  # entrance zones are circles centred on the densest end point cluster of
+  # the ground-truth tracks (it_find_entrance), pooled across sequences
+  find_entrance: {cell: 10, radius_quantile: 0.75, min_radius: 25}
+  bin: 10
+  # a track counts as 'in' when it starts outside and ends inside the zone,
+  # and as 'out' when it starts inside and ends outside
+  criterion_relative_error: 0.15
+
+criteria:
+  detection_f1: 0.80
+  tracking_mota: 0.70
+  tracking_idf1: 0.70
+  tracking_hota: 0.60
+
+# Demonstration videos (one call of it_track_video per video).
+# Detector rule, fixed before the runs: a trained YOLO model where one exists
+# for the species and scene (Delosperma honeybees, Melipona), background
+# subtraction for plain static backgrounds (concrete, leaf litter, arena),
+# otherwise Grounding DINO with the candidate prompts listed; the prompt with
+# the highest median of the per-frame maximum score on five frames is used.
+# segment: SAM 2.1 outlines one frame per second to measure body length.
+demo:
+  gdino_model: IDEA-Research/grounding-dino-base
+  gdino_args: {shortest_edge: 640, longest_edge: 1138, bf16: true, max_box_frac: 0.6}
+  defaults: {width: 1280, tracker: bytetrack, stitch: true, tail: 2, id_cex: 1.6}
+  motion_args: {k: 5, min_threshold: 15, min_area: 20, max_area: 5000, blur: 1, close: 1, bg_frames: 31}
+  videos:
+    hive_entrance: {file: data/raw/web_videos_2/Honeybee_hive_entrance.webm, detector: gdino, prompt: [bee, honeybee, insect], start: 0, duration: 20, fps: 5, entrance: auto}
+    hive_fanning: {file: data/raw/web_videos_2/Honey_bees_fanning_(1).webm, detector: gdino, prompt: [bee, honeybee], start: 0, duration: 13, fps: 5}
+    hive_flight: {file: data/raw/web_videos_2/Bees_flying_in_HD_in_slow_motion.webm, detector: gdino, prompt: [bee, honeybee], start: 60, duration: 20, fps: 5, entrance: auto}
+    bee_counter: {file: data/derived/bee_counter/2023_06_05__19_51_24.mp4, detector: gdino, prompt: [bee, honeybee], start: 0, duration: 20, fps: 5, entrance: auto}
+    bee_counter_tiled: {file: data/derived/bee_counter/2023_06_05__19_51_24.mp4, detector: gdino, prompt: [bee, honeybee], start: 0, duration: 10, fps: 5, entrance: auto, detector_args: {tile: 320}}
+    paper_wasps: {file: data/raw/web_videos_2/Japanese_paper_wasps_(Polistes_snelleni)_cooling_their_nest.webm, detector: gdino, prompt: [wasp, paper wasp, insect], start: 0, duration: 20, fps: 5, segment: true}
+    hornet_nest: {file: "data/raw/web_videos_2/2022-10-06_VRHNIKA_Ribniki_pri_stari_opekarni_HYMENOPTERA_Vespa_crabro_SR\u0160EN.webm", detector: gdino, prompt: [hornet, wasp, insect], start: 0, duration: 20, fps: 5, entrance: auto}
+    hornets_shrub: {file: data/raw/web_videos_2/Black-tailed_hornet_(Vespa_ducalis_pulchra).webm, detector: gdino, prompt: [hornet, wasp], start: 0, duration: 20, fps: 5, segment: true}
+    giant_hornets_tree: {file: data/raw/web_videos_2/Japanese_giant_hornet.webm, detector: gdino, prompt: [hornet, wasp], start: 0, duration: 20, fps: 5}
+    yellowjacket_honeybee: {file: data/raw/web_videos_2/Yellowjacket_1.mp4, detector: gdino, prompt: ["wasp, bee", "yellowjacket, honeybee", insect], start: 0, duration: 20, fps: 5, interaction_dist: 250, segment: true}
+    bumblebees_thistle: {file: data/raw/web_videos_2/Bumble_bees_(Bombus)_on_thistle.webm, detector: gdino, prompt: [bumblebee, bee, insect], start: 0, duration: 20, fps: 5}
+    bees_hibiscus: {file: data/raw/web_videos_2/Bees_on_Hibiscus_syriacus.webm, detector: gdino, prompt: [bee, insect], start: 21, duration: 20, fps: 5}
+    honeybee_oregano: {file: data/raw/web_videos_2/20210623-FPAC-KLS-0001-Oregano.webm, detector: gdino, prompt: [bee, honeybee], start: 0, duration: 20, fps: 5}
+    butterfly_marigold: {file: data/raw/web_videos_2/Small_tortoiseshell_feeding_20220915_163214.webm, detector: gdino, prompt: [butterfly, insect], start: 0, duration: 20, fps: 5}
+    hoverfly_poppy: {file: data/raw/web_videos_2/Hoverfly.webm, detector: gdino, prompt: [hoverfly, fly, insect], start: 0, duration: 20, fps: 5}
+    leafcutter_bees_sunflower: {file: data/raw/web_videos_2/Leafcutting_male_bees_avoid_wasps.webm, detector: gdino, prompt: ["bee, wasp", insect], start: 0, duration: 20, fps: 5, interaction_dist: 150}
+    ant_trail: {file: data/raw/web_videos_2/Ant_trail_on_concrete_kerb.webm, detector: motion, start: 0, duration: 20, fps: 15}
+    leafcutter_ants: {file: data/raw/web_videos_2/Leafcutters_transporting_yellow_flowers.webm, detector: motion, start: 0, duration: 20, fps: 15}
+    leafcutter_ants_gdino: {file: data/raw/web_videos_2/Leafcutters_transporting_yellow_flowers.webm, detector: gdino, prompt: [ant, leafcutter ant, insect], start: 0, duration: 20, fps: 5}
+    drosophila_arena: {file: data/raw/web_videos_2/Evolution-of-Multiple-Additive-Loci-Caused-Divergence-between-Drosophila-yakuba-and-D.-santomea-in-pone.0043888.s004.ogv, detector: motion, start: 0, duration: 30, fps: 25, interaction_dist: 60}
+    drosophila_arena_gdino: {file: data/raw/web_videos_2/Evolution-of-Multiple-Additive-Loci-Caused-Divergence-between-Drosophila-yakuba-and-D.-santomea-in-pone.0043888.s004.ogv, detector: gdino, prompt: [fly, insect], start: 0, duration: 20, fps: 5, interaction_dist: 60}
+    delosperma: {file: data/derived/clips/delosperma_clip_10fps.mp4, detector: yolo, model: yolo_bee, imgsz: 1280, start: 0, duration: 60, fps: 10, rois: data/raw/delosperma/flower_zones.json, rois_scale: 0.6666666667}
+    melipona: {file: data/derived/melipona/2026_03_06_MOTA/30_fps/video_validacao_mota_30fps.mp4, detector: yolo, model: yolo_melipona, imgsz: 640, start: 0, duration: 75, fps: 30, entrance: auto}

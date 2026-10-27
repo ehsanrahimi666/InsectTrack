@@ -27,3 +27,11 @@ subtraction and with Grounding DINO.
 
 The source videos, their authors and licences are listed in
 [LICENSE.md](LICENSE.md) and on each card of the gallery.
+
+## Code and results of the evaluation
+
+The folder [`reproduce`](reproduce) holds the analysis code, its settings and
+the results of the evaluation of InsectTrack 0.1.0: the tracking benchmark on
+annotated hive-entrance sequences of two stingless bees, the hive-entrance
+counts, the frame-rate analysis and the zero-shot pre-labelling benchmark, with
+instructions to run them.

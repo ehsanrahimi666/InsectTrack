@@ -1,0 +1,4 @@
+source: https://doi.org/10.5281/zenodo.20276311 (modelos.zip > yolo_26n_exportados_rpi5.zip > best.pt), CC BY 4.0
+sha256 yolo_26n_exportados_rpi5.zip: 3b73d2885ad0ebd51ea373f2cca64765957b727584d9944850144c1ceb3e0b95
+sha256 best.pt: 36a76f752ae1ff239d3278953d6a4db8ebef9e80aeb3185f34001b3f251a42ca
+onnx (modelo_onnx_fp32.onnx) sha256: 4fe0f4a46b0e87d903a43dad4533c974b0d0a683d9c57ffee0c79c828b868fc9
