@@ -7,6 +7,7 @@ Usage: python3 analysis/21_paper_figures.py [figure names, e.g. fig1 fig4]
 
 import csv
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -40,24 +41,28 @@ GENERA = ("Melipona", "Delosperma")
 def ital(s, bold=False):
     """Genus names in italics (bold italics in bold text) within a label."""
     cmd = r"\mathbfit" if bold else r"\mathit"
+    for sp in ("M. capixaba", "T. carbonaria"):
+        s = s.replace(sp, f"${cmd}{{{sp.replace(' ', '\\ ')}}}$")
     for g in GENERA:
-        s = s.replace(g, f"${cmd}{{{g}}}$")
+        rep = f"${cmd}{{{g}}}$"
+        s = re.sub(rf"(?<![{{\w]){g}", lambda m: rep, s)
     return s
 MM = 1 / 25.4
 FULL = 174 * MM
+SCALED = "#d95f02"
 GREY = "#6b6b6b"
 
 # one colour per detection input, used in every figure
 COL = {
     "ground_truth": "#222222",          # annotated boxes
-    "yolo_melipona": "#1f78b4",         # YOLO26n trained on the Melipona hive
+    "yolo_melipona": "#1f78b4",         # YOLO26n trained on M. capixaba
     "yolo_bee": "#8ec3e6",              # YOLO26n trained on bees on flowers
     "gdino_tiny_800": "#6a3d9a", "gdino_tiny_512": "#9e7cc1", "gdino_base_800": "#3f1d6e",
     "gdino_tiny_800_insect": "#c2a5cf", "owlv2_base": "#e66101", "owlvit_b32": "#fdb863",
     "yolo_bee_1280": "#8ec3e6", "motion": "#8c510a",
 }
 LAB = {
-    "ground_truth": "Annotated boxes", "yolo_melipona": "YOLO26n trained on the Melipona hive",
+    "ground_truth": "Annotated boxes", "yolo_melipona": "YOLO26n trained on M. capixaba",
     "yolo_bee": "YOLO26n trained on bees on flowers", "gdino_tiny_512": "Grounding DINO tiny (zero-shot)",
     "gdino_tiny_800": "Grounding DINO tiny, 800 px", "gdino_base_800": "Grounding DINO base, 800 px",
     "gdino_tiny_800_insect": "Grounding DINO tiny, prompt ‘insect’",
@@ -81,10 +86,10 @@ def save(fig, name):
     print("written", name)
 
 
-def title(ax, letter, text, sub=None, pad=0.02, sub_h=0.09):
+def title(ax, letter, text, sub=None, pad=0.02, sub_h=0.09, size=8):
     """Bold panel letter and title above the panel, optional grey subtitle between them and the panel."""
     y = 1 + pad + (sub_h if sub else 0)
-    ax.text(0, y, f"{letter}  {ital(text, bold=True)}", transform=ax.transAxes, ha="left", va="bottom", fontsize=8,
+    ax.text(0, y, f"{letter}  {ital(text, bold=True)}", transform=ax.transAxes, ha="left", va="bottom", fontsize=size,
             fontweight="bold")
     if sub:
         ax.text(0, 1 + pad, ital(sub), transform=ax.transAxes, ha="left", va="bottom", fontsize=6.5, color=GREY)
@@ -361,8 +366,8 @@ def fig3():
 
 
 # Figure 4: tracking benchmark -------------------------------------------------------------------------
-GROUPS = [("melipona", "120fps", "Melipona, 120 fps"), ("melipona", "30fps", "Melipona, 30 fps"),
-          ("native_bee", "all", "Native bees, 25 fps")]
+GROUPS = [("melipona", "120fps", "M. capixaba, 120 fps"), ("melipona", "30fps", "M. capixaba, 30 fps"),
+          ("native_bee", "all", "T. carbonaria, 25 fps")]
 INPUTS = ["ground_truth", "yolo_melipona", "gdino_tiny_512", "yolo_bee"]
 
 
@@ -390,7 +395,7 @@ def fig4():
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1]); ax.set_xticklabels(["0", "0.25", "0.5", "0.75", "1"])
         ax.set_xlabel("HOTA")
         ax.tick_params(axis="y", length=0)
-        title(ax, "abc"[GROUPS.index((ds, fg, lab))], lab, None, pad=0.03)
+        title(ax, "abc"[GROUPS.index((ds, fg, lab))], lab, None, pad=0.03, size=7.2)
     # DetA against AssA
     ax = fig.add_axes([0.745, 0.2, 0.235, 0.66])
     for inp in INPUTS:
@@ -407,7 +412,7 @@ def fig4():
     title(ax, "d", "Detection limits accuracy", None, pad=0.03)
     hs = [plt.Line2D([], [], ls="", marker="o", ms=4.5, color=COL[k]) for k in INPUTS]
     hs += [plt.Line2D([], [], ls="", marker="o", ms=4, color=GREY), plt.Line2D([], [], ls="", marker="^", ms=4, color=GREY)]
-    fig.legend(hs, [LAB[k] for k in INPUTS] + [ital("Melipona (d)"), "native bees (d)"], loc="lower center", ncol=3,
+    fig.legend(hs, [LAB[k] for k in INPUTS] + [ital("M. capixaba (d)"), ital("T. carbonaria (d)")], loc="lower center", ncol=3,
                bbox_to_anchor=(0.5, 0.0), fontsize=6.8, columnspacing=1.5, handletextpad=0.3)
     save(fig, "fig4_tracking_benchmark")
 
@@ -416,8 +421,8 @@ def fig4():
 PRE = ["gdino_tiny_800", "gdino_tiny_512", "gdino_base_800", "gdino_tiny_800_insect", "owlv2_base", "owlvit_b32",
        "yolo_bee_1280"]
 PRIMARY = {"gdino": 0.3, "owl": 0.15, "yolo": 0.25}
-DSL = {"delosperma": "Delosperma flowers", "melipona": "Melipona hive entrance",
-       "native_bee": "Native-bee entrance"}
+DSL = {"delosperma": "Delosperma flowers", "melipona": "M. capixaba entrance",
+       "native_bee": "T. carbonaria entrance"}
 
 
 def primary(cfg):
@@ -461,7 +466,7 @@ def fig6():
     title(ax, "d", "Accuracy and speed", "2 CPU cores", pad=0.03)
     hs = [plt.Line2D([], [], color=COL[c], lw=1.4) for c in PRE]
     hs += [plt.Line2D([], [], ls="", marker=mk[k], ms=4, color=GREY) for k in mk]
-    fig.legend(hs, [LAB[c] for c in PRE] + [ital("Melipona entrance (d)"), "native-bee entrance (d)", ital("Delosperma (d)")],
+    fig.legend(hs, [LAB[c] for c in PRE] + [ital("M. capixaba entrance (d)"), ital("T. carbonaria entrance (d)"), ital("Delosperma (d)")],
                loc="center", ncol=4, bbox_to_anchor=(0.5, 0.445), fontsize=6.4, columnspacing=1.0, handlelength=1.5)
     # examples: frame with the most annotated boxes in each data set
     det = pd.read_csv(pl / "detections__gdino_tiny_800.csv")
@@ -508,7 +513,8 @@ def fig5():
     fr = pd.read_csv(BENCH / "frame_rate" / "frame_rate_pooled.csv")
     mv = pd.read_csv(BENCH / "frame_rate" / "frame_rate_movements.csv")
     pool = pd.read_csv(BENCH / "tracking" / "metrics_pooled.csv")
-    diag = pd.read_csv(BENCH / "tracking" / "inout_diagnostic_events.csv")
+    diag = pd.read_csv(BENCH / "tracking" / "inout_diagnostic_summary.csv")
+    sg = pd.read_csv(BENCH / "frame_rate" / "frame_rate_scaled_gate.csv").sort_values("fps")
     rates = sorted(fr.fps.unique())
     fig = plt.figure(figsize=(FULL, 112 * MM))
     h1 = 0.33; y1 = 0.6; w1 = 0.255
@@ -519,11 +525,14 @@ def fig5():
             ax.plot(q.fps, q[col], color="#bdbdbd", lw=0.7, zorder=1)
         med = fr.groupby("fps")[col].median()
         ax.plot(med.index, med.values, color="#222222", lw=1.6, marker="o", ms=3, zorder=3, label="median of 10 trackers")
+        ax.plot(sg.fps, sg[col], color=SCALED, lw=1.1, ls="--", marker="s", ms=2.6, zorder=4)
         ax.set_xticks(rates); ax.set_xlabel("Frame rate (frames per second)"); ax.set_ylabel(ylab)
     axa.set_ylim(0, 0.9)
-    axa.text(0.97, 0.95, "grey: each tracker\nblack: median", transform=axa.transAxes, ha="right", va="top", fontsize=6.3, color=GREY)
+    axa.text(0.97, 0.97, "grey: each tracker\nblack: median", transform=axa.transAxes, ha="right", va="top", fontsize=6.3, color=GREY)
+    axa.text(0.97, 0.81, "orange: Hungarian,\ngate scaled to frame rate", transform=axa.transAxes, ha="right", va="top",
+             fontsize=6.3, color=SCALED)
     title(axa, "a", "Entrance counts", "annotated boxes, 5 sequences, 18 movements", pad=0.03)
-    axc.set_ylim(0.75, 1.0)
+    axc.set_ylim(min(0.75, np.floor(20 * min(fr.hota.min(), sg.hota.min())) / 20), 1.0)
     title(axc, "c", "Tracking accuracy", "annotated boxes, whole sequences", pad=0.03)
     # displacement of entering and leaving bees
     data = [mv[mv.fps == r].step_per_box.values for r in rates]
@@ -534,11 +543,11 @@ def fig5():
     for i, d in enumerate(data):
         axb.scatter(i + rng.uniform(-0.14, 0.14, len(d)), d, s=5, color="#1f78b4", alpha=0.7, lw=0, zorder=3)
     axb.axhline(1, ls="--", lw=0.7, color=GREY)
-    axb.text(-0.45, 1.08, "one body length", ha="left", va="bottom", fontsize=6.3, color=GREY)
+    axb.text(-0.45, 1.08, "one box size", ha="left", va="bottom", fontsize=6.3, color=GREY)
     axb.set_xticks(range(len(rates))); axb.set_xticklabels(rates)
-    axb.set_xlabel("Frame rate (frames per second)"); axb.set_ylabel("Largest step between frames\n(body lengths)")
+    axb.set_xlabel("Frame rate (frames per second)"); axb.set_ylabel("Largest step between frames\n(box sizes)")
     axb.set_ylim(0, None)
-    title(axb, "b", "Movement between frames", "bees entering or leaving, n = 18 per rate", pad=0.03)
+    title(axb, "b", "Movement between frames", f"bees entering or leaving, {len(data[0])} movements per rate", pad=0.03)
     # counts with detections (primary benchmark)
     axd = fig.add_axes([0.245, 0.09, 0.29, 0.33])
     rows = [("ground_truth", "120fps"), ("yolo_melipona", "120fps"), ("ground_truth", "30fps"),
@@ -551,26 +560,33 @@ def fig5():
         axd.scatter(q.inout_rel_error, [y] * len(q), s=8, color=COL[inp], zorder=3, lw=0)
         axd.scatter([q.inout_rel_error.median()], [y], s=34, marker="|", color="#000000", zorder=4)
     axd.set_yticks(range(len(rows)))
-    short = {"ground_truth": "Annotated boxes", "yolo_melipona": "YOLO26n (Melipona hive)",
+    short = {"ground_truth": "Annotated boxes", "yolo_melipona": "YOLO26n (M. capixaba)",
              "gdino_tiny_512": "Grounding DINO tiny"}
     axd.set_yticklabels([ital(f"{short[i]}, {f[:-3]} fps") for i, f in rows][::-1])
     axd.set_xlim(-0.02, 1.0); axd.set_xlabel("Relative error of in + out counts")
     axd.tick_params(axis="y", length=0)
-    title(axd, "d", "Counts from detections", "Melipona; dots: trackers, bar: median", pad=0.03)
-    # share of annotated movements reproduced by each tracker
-    axe = fig.add_axes([0.67, 0.09, 0.31, 0.33])
-    rec = diag[diag.dataset == "melipona"].groupby(["tracker", "fps_group"]).recovered.mean().unstack()
-    rec = rec.loc[TRACKERS].sort_values("120fps")
+    title(axd, "d", "Counts from detections", "M. capixaba; dots: trackers, bar: median", pad=0.03)
+    # annotated movements reproduced and spurious movements of each tracker (annotated boxes)
+    axe = fig.add_axes([0.665, 0.09, 0.255, 0.33])
+    dg = diag[(diag.dataset == "melipona") & (diag.input == "ground_truth")].set_index(["tracker", "fps_group"])
+    rec = dg.recall.unstack().loc[TRACKERS].sort_values(["120fps", "30fps"])
+    spur = dg.spurious.unstack().loc[rec.index]
+    yt = axe.get_yaxis_transform()
     for i, t in enumerate(rec.index):
         axe.plot([rec.loc[t, "30fps"], rec.loc[t, "120fps"]], [i, i], color="#cfcfcf", lw=1.2, zorder=1)
         axe.scatter(rec.loc[t, "120fps"], i, s=16, color="#01665e", zorder=3, lw=0)
         axe.scatter(rec.loc[t, "30fps"], i, s=16, color="#bf812d", zorder=3, lw=0)
+        axe.text(1.07, i, f"{int(spur.loc[t, '120fps'])}", transform=yt, ha="center", va="center", fontsize=6.3, color="#01665e")
+        axe.text(1.17, i, f"{int(spur.loc[t, '30fps'])}", transform=yt, ha="center", va="center", fontsize=6.3, color="#bf812d")
+    axe.text(1.12, len(rec) - 0.35, "spurious", transform=yt, ha="center", va="bottom", fontsize=6.3, color=GREY)
     axe.set_yticks(range(len(rec))); axe.set_yticklabels([TLAB[t] for t in rec.index]); axe.tick_params(axis="y", length=0)
+    axe.set_ylim(-0.6, len(rec) + 0.7)
     axe.set_xlim(-0.02, 1.02); axe.set_xlabel("Share of annotated movements reproduced")
     axe.legend([plt.Line2D([], [], ls="", marker="o", ms=4, color="#01665e"),
                 plt.Line2D([], [], ls="", marker="o", ms=4, color="#bf812d")], ["120 fps", "30 fps"],
-               loc="lower right", fontsize=6.5, handletextpad=0.2)
-    title(axe, "e", "Movements reproduced", "annotated boxes, Melipona", pad=0.03)
+               loc="upper left", ncol=2, fontsize=6.5, handletextpad=0.2, columnspacing=1.0, borderaxespad=0.2)
+    n120 = int(dg.movements.unstack().iloc[0]["120fps"]); n30 = int(dg.movements.unstack().iloc[0]["30fps"])
+    title(axe, "e", "Movements reproduced", f"annotated boxes, M. capixaba; {n120} and {n30} movements", pad=0.03)
     save(fig, "fig5_entrance_counts")
 
 

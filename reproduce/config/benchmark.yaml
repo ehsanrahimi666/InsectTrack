@@ -64,8 +64,7 @@ tracking:
     melipona: [ground_truth, yolo_melipona, yolo_bee, gdino_tiny_512]
     native_bee: [ground_truth, yolo_bee]
   gdino_sequences: 30fps      # zero-shot detection only on the 30 fps Melipona sequences
-  # frame rate of the native-bee footage given in the data set record (25 frames per second);
-  # the image sequences are consecutive frames of this footage with frames without bees removed
+  # frame rate of the native-bee footage given in the data set record (25 frames per second)
   frame_rate: {native_bee: 25}
   # the Melipona model was exported with a fixed 640 x 640 input
   yolo: {imgsz: {yolo_melipona: 640, yolo_bee: 1280}, min_score: 0.05}

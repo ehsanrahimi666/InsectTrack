@@ -17,6 +17,7 @@ python3 analysis/11_prelabel.py
 # trackers, metrics, in/out counts and sensitivity
 Rscript analysis/run_tracking_benchmark.R
 Rscript -e "$rlib; source(here::here('analysis', '18_inout_diagnostic.R'))"
+Rscript -e "$rlib; source(here::here('analysis', '19_confirmation_check.R'))"
 # exploratory: the same Melipona sequences annotated at six frame rates
 Rscript -e "$rlib; source(here::here('analysis', '20_frame_rate.R'))"
 Rscript -e "$rlib; source(here::here('analysis', '13_prelabel_eval.R'))"
@@ -29,4 +30,5 @@ Rscript -e "$rlib; source(here::here('analysis', '16_demo_gallery.R'))"
 Rscript -e "$rlib; source(here::here('analysis', '17_benchmark_figures.R'))"
 # figures of the paper
 python3 analysis/21_paper_figures.py
+python3 analysis/22_paper_numbers.py
 echo "BENCHMARKS COMPLETE"

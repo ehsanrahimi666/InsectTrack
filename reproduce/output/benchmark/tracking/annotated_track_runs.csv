@@ -1,0 +1,4 @@
+"dataset","fps_group","sequences","tracks","runs","boxes","missing_frames","frames"
+"melipona","120fps",7,60,63,10927,0,8400
+"melipona","30fps",5,32,41,2072,0,1500
+"native_bee","all",16,198,1299,5544,335,3766

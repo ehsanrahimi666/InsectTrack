@@ -2,7 +2,8 @@
 # Melipona sequences annotated at 30, 40, 50, 60, 100 and 120 frames per
 # second are tracked from their annotated boxes with every tracker, and
 # HOTA, IDF1, MOTA, entrance counts and the displacement of the bees between
-# frames are compared across frame rates.
+# frames are compared across frame rates. Post hoc check: the Hungarian
+# tracker with its gate scaled to the frame interval.
 
 source(here::here("analysis", "10_common.R"))
 source(here::here("analysis", "10_tracking_common.R"))
@@ -36,7 +37,7 @@ common <- names(which(table(gts$sequence) == length(rates)))
 gts <- gts[gts$sequence %in% common, ]
 log_msg("frame rates: %d sequences annotated at all of %s frames per second", length(common), paste(rates, collapse = ", "))
 
-rows <- list(); hres <- list(); moves <- list()
+rows <- list(); hres <- list(); moves <- list(); scaled <- list(); hres_scaled <- list()
 for (i in seq_len(nrow(gts))) {
   s <- data.frame(dataset = "melipona", id = paste0(gts$sequence[i], "_", gts$fps[i], "fps"), fps = gts$fps[i],
                   W = 1280, H = 720)
@@ -68,6 +69,20 @@ for (i in seq_len(nrow(gts))) {
                                       h[, c("hota", "deta", "assa")])
     hres[[paste(s$fps, gts$sequence[i], tn)]] <- h
   }
+  # post hoc check: the Hungarian tracker with its gate scaled to the frame interval (gate at 120 fps)
+  p <- tb$trackers$native_hungarian
+  tr <- it_track(det[det$conf >= thr$high, , drop = FALSE], "hungarian", gate = p$gate * 120 / s$fps,
+                 max_gap = p$max_gap, min_length = p$min_length, velocity_weight = p$velocity_weight)
+  e <- it_eval_tracks(tr, g, tb$max_dist$melipona)
+  h <- it_eval_hota(tr, g, "iou")
+  io <- inout(tr, zone)
+  scaled[[length(scaled) + 1]] <- cbind(data.frame(sequence = gts$sequence[i], fps = s$fps,
+                                                   tracker = "native_hungarian_scaled_gate", gate = p$gate * 120 / s$fps,
+                                                   n_in = io[["n_in"]], n_out = io[["n_out"]],
+                                                   gt_in = gio[["n_in"]], gt_out = gio[["n_out"]]),
+                                        e[, c("gt_objects", "pred_objects", "fp", "fn", "id_switches", "mota", "idf1")],
+                                        h[, c("hota", "deta", "assa")])
+  hres_scaled[[paste(s$fps, gts$sequence[i])]] <- h
   log_msg("%s done", s$id)
 }
 bys <- do.call(rbind, rows)
@@ -76,17 +91,25 @@ mv <- do.call(rbind, moves)
 mv$step_per_box <- mv$max_step_px / mv$box_size_px
 write_csv(mv, file.path(od, "frame_rate_movements.csv"))
 
-pooled <- do.call(rbind, lapply(split(bys, list(bys$fps, bys$tracker), drop = TRUE), function(z) {
-  GT <- sum(z$gt_objects); P <- sum(z$pred_objects)
-  idtp <- sum(z$idf1 * (z$gt_objects + z$pred_objects) / 2)
-  hc <- it_combine_hota(hres[paste(z$fps, z$sequence, z$tracker)])
-  data.frame(fps = z$fps[1], tracker = z$tracker[1], sequences = nrow(z), gt_objects = GT,
-             mota = 1 - sum(z$fn + z$fp + z$id_switches) / GT, idf1 = 2 * idtp / (GT + P),
-             id_switches = sum(z$id_switches), hota = hc$hota, deta = hc$deta, assa = hc$assa,
-             n_in = sum(z$n_in), n_out = sum(z$n_out), gt_in = sum(z$gt_in), gt_out = sum(z$gt_out))
-}))
-pooled$inout_rel_error <- (abs(pooled$n_in - pooled$gt_in) + abs(pooled$n_out - pooled$gt_out)) /
-  pmax(1, pooled$gt_in + pooled$gt_out)
-pooled <- pooled[order(pooled$tracker, pooled$fps), ]
-write_csv(pooled, file.path(od, "frame_rate_pooled.csv"))
+pool_rates <- function(bys, hl, hkey) {
+  pooled <- do.call(rbind, lapply(split(bys, list(bys$fps, bys$tracker), drop = TRUE), function(z) {
+    GT <- sum(z$gt_objects); P <- sum(z$pred_objects)
+    idtp <- sum(z$idf1 * (z$gt_objects + z$pred_objects) / 2)
+    hc <- it_combine_hota(hl[hkey(z)])
+    data.frame(fps = z$fps[1], tracker = z$tracker[1], sequences = nrow(z), gt_objects = GT,
+               mota = 1 - sum(z$fn + z$fp + z$id_switches) / GT, idf1 = 2 * idtp / (GT + P),
+               id_switches = sum(z$id_switches), hota = hc$hota, deta = hc$deta, assa = hc$assa,
+               n_in = sum(z$n_in), n_out = sum(z$n_out), gt_in = sum(z$gt_in), gt_out = sum(z$gt_out),
+               inout_abs_error_seq = sum(abs(z$n_in - z$gt_in) + abs(z$n_out - z$gt_out)))
+  }))
+  pooled$inout_rel_error <- (abs(pooled$n_in - pooled$gt_in) + abs(pooled$n_out - pooled$gt_out)) /
+    pmax(1, pooled$gt_in + pooled$gt_out)
+  pooled$inout_rel_error_seq <- pooled$inout_abs_error_seq / pmax(1, pooled$gt_in + pooled$gt_out)
+  pooled[order(pooled$tracker, pooled$fps), ]
+}
+write_csv(pool_rates(bys, hres, function(z) paste(z$fps, z$sequence, z$tracker)),
+          file.path(od, "frame_rate_pooled.csv"))
+sc <- do.call(rbind, scaled)
+write_csv(sc, file.path(od, "frame_rate_scaled_gate_by_sequence.csv"))
+write_csv(pool_rates(sc, hres_scaled, function(z) paste(z$fps, z$sequence)), file.path(od, "frame_rate_scaled_gate.csv"))
 log_msg("frame-rate analysis: %d sequence-rate-tracker results", nrow(bys))

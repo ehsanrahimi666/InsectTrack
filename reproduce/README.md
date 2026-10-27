@@ -18,8 +18,9 @@ this folder.
 | `analysis/10_detect.py` | Detections of every annotated frame (YOLO26n models, Grounding DINO) |
 | `analysis/11_prelabel.py`, `13_prelabel_eval.R` | Zero-shot pre-labelling and its evaluation |
 | `analysis/10_tracking_common.R`, `12_tracking_benchmark.R` | Tracking benchmark: ten trackers, four inputs, CLEAR MOT, IDF1, HOTA, entrance counts and the ByteTrack sensitivity analysis |
-| `analysis/18_inout_diagnostic.R` | Reproduction of each annotated movement into or out of the entrance |
-| `analysis/20_frame_rate.R` | Five *M. capixaba* sequences annotated at 30, 40, 50, 60, 100 and 120 frames per second |
+| `analysis/18_inout_diagnostic.R` | Movements into and out of the entrance zone matched between each tracker and the annotations: reproduced, missed and spurious movements |
+| `analysis/19_confirmation_check.R` | OC-SORT, Hybrid-SORT and BoostTrack run again with one match required to report a track |
+| `analysis/20_frame_rate.R` | Five *M. capixaba* sequences annotated at 30, 40, 50, 60, 100 and 120 frames per second, and the Hungarian tracker with its gate scaled to the frame interval |
 | `analysis/15_xcheck_hota.R`, `15_xcheck_hota.py` | Independent Python implementation of HOTA compared with the package |
 | `analysis/14_demo_videos.R`, `16_demo_gallery.R` | Demonstration videos and the gallery page |
 | `analysis/17_benchmark_figures.R`, `21_paper_figures.py`, `22_paper_numbers.py` | Figures of the benchmarks and of the paper; every number reported in the paper with its source file (`output/paper/numbers.csv`) |
@@ -50,7 +51,8 @@ this folder.
    `data/raw/web_videos_2/video_sources_2.csv` (`download_web_videos_2.cmd` on
    Windows, or the URLs in the list).
 5. Create a `logs` folder, run `Rscript analysis/run_all.R B`, then
-   `bash analysis/run_benchmarks.sh`, then `python3 analysis/22_paper_numbers.py`.
+   `bash analysis/run_benchmarks.sh`, which ends with the figures of the paper and
+   `output/paper/numbers.csv`.
 
 On two CPU threads the benchmark steps took about ten hours, mostly for
 Grounding DINO, OWLv2 and SAM 2.1. The smartphone video of honeybees on

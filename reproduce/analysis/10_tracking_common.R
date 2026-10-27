@@ -100,3 +100,90 @@ inout <- function(tr, zone) {
   ec <- it_entrance_counts(tr, zone)
   c(n_in = sum(ec$events$direction == "in"), n_out = sum(ec$events$direction == "out"))
 }
+
+# Movements into and out of the entrance zone, matched between tracks and annotations ----------
+# Tracker boxes are matched one-to-one to annotated boxes in each frame (IoU >= iou_min). A tracker
+# movement and an annotated movement in the same direction correspond when their tracks share
+# matched boxes; the pairs that share most boxes are chosen by optimal assignment. Annotated
+# movements without a counterpart are missed; tracker movements without one are spurious.
+
+box_corners <- function(d) {
+  if (all(c("x0", "y0", "x1", "y1") %in% names(d))) return(cbind(d$x0, d$y0, d$x1, d$y1))
+  cbind(d$x - d$width / 2, d$y - d$height / 2, d$x + d$width / 2, d$y + d$height / 2)
+}
+
+iou_matrix <- function(a, b) {
+  inter <- pmax(0, outer(a[, 3], b[, 3], pmin) - outer(a[, 1], b[, 1], pmax)) *
+    pmax(0, outer(a[, 4], b[, 4], pmin) - outer(a[, 2], b[, 2], pmax))
+  area_a <- (a[, 3] - a[, 1]) * (a[, 4] - a[, 2]); area_b <- (b[, 3] - b[, 1]) * (b[, 4] - b[, 2])
+  inter / (outer(area_a, area_b, "+") - inter)
+}
+
+# one-to-one assignment of rows to columns maximising the total weight, over weights >= min_w
+assign_max <- function(w, min_w) {
+  w[w < min_w] <- 0
+  if (!length(w) || max(w) <= 0) return(matrix(integer(), 0, 2))
+  flip <- nrow(w) > ncol(w)
+  m <- if (flip) t(w) else w
+  p <- cbind(seq_len(nrow(m)), as.integer(clue::solve_LSAP(m, maximum = TRUE)))
+  p <- p[m[p] > 0, , drop = FALSE]
+  if (flip) p[, 2:1, drop = FALSE] else p
+}
+
+match_boxes <- function(tr, g, iou_min = 0.5) {
+  bt <- box_corners(tr); bg <- box_corners(g)
+  st <- split(seq_len(nrow(tr)), tr$frame); sg <- split(seq_len(nrow(g)), g$frame)
+  pairs <- lapply(intersect(names(st), names(sg)), function(f) {
+    i <- st[[f]]; j <- sg[[f]]
+    p <- assign_max(iou_matrix(bt[i, , drop = FALSE], bg[j, , drop = FALSE]), iou_min)
+    if (nrow(p)) cbind(i[p[, 1]], j[p[, 2]]) else NULL
+  })
+  m <- do.call(rbind, pairs)
+  if (is.null(m)) m <- matrix(integer(), 0, 2)
+  colnames(m) <- c("tr_row", "gt_row")
+  m
+}
+
+zone_movements <- function(d, zone) {
+  z <- it_zone_transitions(d, zone)
+  z <- z[z$type %in% c("entered", "exited"), , drop = FALSE]
+  data.frame(track = z$track, direction = ifelse(z$type == "entered", "in", "out"), stringsAsFactors = FALSE)
+}
+
+# gtr: annotated tracks (track column); tr: tracker output. Returns the annotated movements with
+# reproduced / failure and the tracker movements with their counterpart or cause.
+match_movements <- function(tr, gtr, zone, iou_min = 0.5) {
+  tr <- tr[!is.na(tr$track), , drop = FALSE]
+  mg <- zone_movements(gtr, zone); mt <- zone_movements(tr, zone)
+  pm <- match_boxes(tr, gtr, iou_min)
+  pt <- tr$track[pm[, "tr_row"]]; pg <- gtr$track[pm[, "gt_row"]]
+  w <- matrix(0, nrow(mt), nrow(mg))
+  if (nrow(mt) && nrow(mg) && nrow(pm)) {
+    sh <- table(factor(pt, levels = mt$track), factor(pg, levels = mg$track))
+    w <- unclass(sh)[, , drop = FALSE] * outer(mt$direction, mg$direction, "==")
+  }
+  a <- assign_max(w, 1)
+  mg$reproduced <- seq_len(nrow(mg)) %in% a[, 2]
+  mg$tracker_track <- rep(NA_integer_, nrow(mg)); mg$tracker_track[a[, 2]] <- mt$track[a[, 1]]
+  inside_gt <- it_point_in_polygon(gtr$x, gtr$y, zone$x, zone$y)
+  mg$failure <- vapply(seq_len(nrow(mg)), function(k) {
+    if (mg$reproduced[k]) return("")
+    rows <- pm[pg == mg$track[k], "gt_row"]
+    if (!length(rows)) return("not tracked")
+    tin <- unique(tr$track[pm[pg == mg$track[k] & inside_gt[pm[, "gt_row"]], "tr_row"]])
+    tout <- unique(tr$track[pm[pg == mg$track[k] & !inside_gt[pm[, "gt_row"]], "tr_row"]])
+    if (!length(tin)) return("no tracked box inside the zone")
+    if (!length(tout)) return("no tracked box outside the zone")
+    if (!length(intersect(tin, tout))) return("track broken at the zone edge")
+    "other"
+  }, "")
+  mt$matched <- seq_len(nrow(mt)) %in% a[, 1]
+  mt$cause <- vapply(seq_len(nrow(mt)), function(k) {
+    if (mt$matched[k]) return("")
+    gs <- unique(pg[pt == mt$track[k]])
+    if (!length(gs)) return("false detections")
+    same <- mg$track[mg$direction == mt$direction[k]]
+    if (any(gs %in% same)) "duplicate of an annotated movement" else "annotated bee without this movement"
+  }, "")
+  list(gt = mg, tracker = mt)
+}

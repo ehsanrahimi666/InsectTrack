@@ -1,4 +1,4 @@
-"dataset","fps_group","median_max_step_px","median_box_size_px","median_step_per_box","movements","share_over_one_box"
-"melipona","120fps",44.7267769151846,43.9834575901271,0.962043939390355,28,0.464285714285714
-"melipona","30fps",162.713026321802,43.5349860699644,3.67424106041839,18,0.944444444444444
-"native_bee","all",17.3662689541142,46.6576237262906,0.352733802751875,8,0.375
+"dataset","fps_group","median_max_step_px","median_box_size_px","median_step_per_box","median_boxes_outside","movements","share_over_one_box","share_under_three_outside"
+"melipona","120fps",44.7267769151846,43.9834575901271,0.962043939390355,31,28,0.464285714285714,0
+"melipona","30fps",162.713026321802,43.5349860699644,3.67424106041839,8,18,0.944444444444444,0
+"native_bee","all",17.3662689541142,46.6576237262906,0.352733802751875,33.5,8,0.375,0

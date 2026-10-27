@@ -43,8 +43,6 @@ for (i in seq_len(nrow(seqs))) {
     if (is.null(det)) next
     fs <- seq_frames(s, g, det)
     thr <- tb$thresholds[[input]]
-    dq <- if (input == "ground_truth") NULL else
-      it_eval_detections(det[det$conf >= thr$high, ], g, iou = 0.5, frames = sort(unique(g$frame)))$summary
     rows <- list(); hres <- list()
     for (tn in trackers) {
       t0 <- Sys.time()
@@ -59,7 +57,7 @@ for (i in seq_len(nrow(seqs))) {
                                      gt_in = gio[["n_in"]], gt_out = gio[["n_out"]]), ev$row)
       hres[[tn]] <- ev$hota
     }
-    saveRDS(list(rows = do.call(rbind, rows), hota = hres, det_quality = dq), cf)
+    saveRDS(list(rows = do.call(rbind, rows), hota = hres), cf)
     log_msg("%s %s %s done", s$dataset, s$id, input)
   }
 }
@@ -74,10 +72,15 @@ for (r in res) for (tn in names(r$hota)) {
   k <- paste(r$rows$dataset[1], r$rows$sequence[1], r$rows$input[1], tn, sep = "|")
   hota_list[[k]] <- r$hota[[tn]]
 }
-dq <- do.call(rbind, lapply(seq_along(files), function(i) {
-  if (is.null(res[[i]]$det_quality)) return(NULL)
-  p <- strsplit(sub("\\.rds$", "", basename(files[i])), "__")[[1]]
-  cbind(dataset = p[1], sequence = p[2], input = p[3], res[[i]]$det_quality)
+# precision, recall and F1 of each input at its high threshold, over all frames of each sequence
+dq <- do.call(rbind, lapply(files, function(f) {
+  p <- strsplit(sub("\\.rds$", "", basename(f)), "__")[[1]]
+  if (p[3] == "ground_truth") return(NULL)
+  s <- all_seqs[all_seqs$dataset == p[1] & all_seqs$id == p[2], ]
+  g <- read_gt(s); det <- read_det(s, p[3])
+  hi <- det[det$conf >= tb$thresholds[[p[3]]]$high, ]
+  cbind(dataset = p[1], sequence = p[2], input = p[3],
+        it_eval_detections(hi, g, iou = 0.5, frames = seq_frames(s, g, det))$summary)
 }))
 write_csv(dq, file.path(od, "detection_quality_by_sequence.csv"))
 
@@ -91,13 +94,16 @@ pool <- function(d, keys) {
           pred_tracks = sum(z$pred_tracks), mota = 1 - sum(z$fn + z$fp + z$id_switches) / GT,
           idf1 = 2 * idtp / (GT + P), id_switches = sum(z$id_switches), hota = hc$hota, deta = hc$deta,
           assa = hc$assa, n_in = sum(z$n_in), n_out = sum(z$n_out), gt_in = sum(z$gt_in), gt_out = sum(z$gt_out),
-          seconds = sum(z$seconds))
+          seconds = sum(z$seconds),
+          # count errors of the single sequences added up, so that errors of different sequences do not cancel
+          inout_abs_error_seq = sum(abs(z$n_in - z$gt_in) + abs(z$n_out - z$gt_out)))
   }))
 }
 by_seq$fps_group <- ifelse(by_seq$dataset == "melipona", paste0(by_seq$fps, "fps"), "all")
 pooled <- pool(by_seq, c("dataset", "fps_group", "input", "tracker"))
 pooled$inout_abs_error <- abs(pooled$n_in - pooled$gt_in) + abs(pooled$n_out - pooled$gt_out)
 pooled$inout_rel_error <- pooled$inout_abs_error / pmax(1, pooled$gt_in + pooled$gt_out)
+pooled$inout_rel_error_seq <- pooled$inout_abs_error_seq / pmax(1, pooled$gt_in + pooled$gt_out)
 rownames(pooled) <- NULL
 write_csv(pooled, file.path(od, "metrics_pooled.csv"))
 log_msg("tracking benchmark: %d sequence-input-tracker results", nrow(by_seq))
