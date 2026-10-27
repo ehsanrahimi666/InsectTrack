@@ -1,0 +1,53 @@
+{
+  "video": "delosperma_clip_10fps.mp4",
+  "analysed": [0, 60],
+  "fps": 10,
+  "width": 1280,
+  "height": 720,
+  "detector": "yolo",
+  "model": "flower333_yolo26n_deploy.pt",
+  "prompt": null,
+  "conf": 0.1,
+  "tracker": "bytetrack",
+  "tracker_args": [],
+  "stitch": true,
+  "bin": 1,
+  "heatmap_cell": 20,
+  "entrance": null,
+  "segment": false,
+  "video_info": {
+    "file": "delosperma_clip_10fps.mp4",
+    "duration_s": 115.8,
+    "width": 1280,
+    "height": 720,
+    "frames": 1159,
+    "fps": 10,
+    "codec": "h264",
+    "rotation": 0,
+    "display_width": 1280,
+    "display_height": 720
+  },
+  "software": {
+    "R": "R version 4.6.1 (2026-06-24)",
+    "InsectTrack": "0.1.0",
+    "python": {
+      "python": "3.13.17",
+      "numpy": "2.5.3",
+      "torch": "2.14.1+cpu",
+      "torchvision": "0.29.1+cpu",
+      "transformers": "5.20.2",
+      "ultralytics": "8.4.189",
+      "boxmot": "25.0.0",
+      "cv2": "4.14.0",
+      "PIL": "12.3.0",
+      "device": "cpu"
+    }
+  },
+  "run_time_s": {
+    "detection": 1117.3,
+    "tracking": 0.4,
+    "analysis": 0.2,
+    "figures": 1.8,
+    "rendering": 395.6
+  }
+}

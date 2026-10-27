@@ -1,0 +1,2 @@
+"video","start_s","end_s","frames","detections","tracks","mean_insects_per_frame","max_insects_per_frame","median_track_s","hot_cells"
+"20210623-FPAC-KLS-0001-Oregano.webm",0,20,100,146,2,0.99,2,9.7,99

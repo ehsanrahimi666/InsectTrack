@@ -1,0 +1,2 @@
+"video","start_s","end_s","frames","detections","tracks","mean_insects_per_frame","max_insects_per_frame","median_track_s","hot_cells"
+"Hoverfly.webm",0,20,100,157,2,1.43,2,14.2,64

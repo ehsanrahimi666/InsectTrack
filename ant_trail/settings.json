@@ -1,0 +1,41 @@
+{
+  "video": "Ant_trail_on_concrete_kerb.webm",
+  "analysed": [0, 20],
+  "fps": 15,
+  "width": 1280,
+  "height": 720,
+  "detector": "motion",
+  "model": null,
+  "prompt": null,
+  "conf": 0.1,
+  "tracker": "bytetrack",
+  "tracker_args": [],
+  "stitch": true,
+  "bin": 1,
+  "heatmap_cell": 20,
+  "entrance": null,
+  "segment": false,
+  "video_info": {
+    "file": "Ant_trail_on_concrete_kerb.webm",
+    "duration_s": 35.001,
+    "width": 1920,
+    "height": 1080,
+    "frames": "NA",
+    "fps": 29.97002997003,
+    "codec": "vp8",
+    "rotation": 0,
+    "display_width": 1920,
+    "display_height": 1080
+  },
+  "software": {
+    "R": "R version 4.6.1 (2026-06-24)",
+    "InsectTrack": "0.1.0"
+  },
+  "run_time_s": {
+    "detection": 104,
+    "tracking": 2.5,
+    "analysis": 0.8,
+    "figures": 1.5,
+    "rendering": 102.7
+  }
+}

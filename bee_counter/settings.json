@@ -1,0 +1,53 @@
+{
+  "video": "2023_06_05__19_51_24.mp4",
+  "analysed": [0, 20],
+  "fps": 5,
+  "width": 640,
+  "height": 480,
+  "detector": "gdino",
+  "model": "grounding-dino-base",
+  "prompt": "honeybee",
+  "conf": 0.15,
+  "tracker": "bytetrack",
+  "tracker_args": [],
+  "stitch": true,
+  "bin": 1,
+  "heatmap_cell": 10,
+  "entrance": "auto",
+  "segment": false,
+  "video_info": {
+    "file": "2023_06_05__19_51_24.mp4",
+    "duration_s": 36.966667,
+    "width": 640,
+    "height": 480,
+    "frames": 1109,
+    "fps": 30,
+    "codec": "h264",
+    "rotation": 0,
+    "display_width": 640,
+    "display_height": 480
+  },
+  "software": {
+    "R": "R version 4.6.1 (2026-06-24)",
+    "InsectTrack": "0.1.0",
+    "python": {
+      "python": "3.13.17",
+      "numpy": "2.5.3",
+      "torch": "2.14.1+cpu",
+      "torchvision": "0.29.1+cpu",
+      "transformers": "5.20.2",
+      "ultralytics": "8.4.189",
+      "boxmot": "25.0.0",
+      "cv2": "4.14.0",
+      "PIL": "12.3.0",
+      "device": "cpu"
+    }
+  },
+  "run_time_s": {
+    "detection": 453,
+    "tracking": 0,
+    "analysis": 0,
+    "figures": 1,
+    "rendering": 11.8
+  }
+}

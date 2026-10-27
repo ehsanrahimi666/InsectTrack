@@ -1,0 +1,41 @@
+{
+  "video": "Evolution-of-Multiple-Additive-Loci-Caused-Divergence-between-Drosophila-yakuba-and-D.-santomea-in-pone.0043888.s004.ogv",
+  "analysed": [0, 30],
+  "fps": 25,
+  "width": 960,
+  "height": 540,
+  "detector": "motion",
+  "model": null,
+  "prompt": null,
+  "conf": 0.1,
+  "tracker": "bytetrack",
+  "tracker_args": [],
+  "stitch": true,
+  "bin": 1,
+  "heatmap_cell": 15,
+  "entrance": null,
+  "segment": false,
+  "video_info": {
+    "file": "Evolution-of-Multiple-Additive-Loci-Caused-Divergence-between-Drosophila-yakuba-and-D.-santomea-in-pone.0043888.s004.ogv",
+    "duration_s": 53.400091,
+    "width": 960,
+    "height": 540,
+    "frames": "NA",
+    "fps": 25,
+    "codec": "theora",
+    "rotation": 0,
+    "display_width": 960,
+    "display_height": 540
+  },
+  "software": {
+    "R": "R version 4.6.1 (2026-06-24)",
+    "InsectTrack": "0.1.0"
+  },
+  "run_time_s": {
+    "detection": 108.4,
+    "tracking": 1,
+    "analysis": 0.9,
+    "figures": 0.5,
+    "rendering": 86.9
+  }
+}

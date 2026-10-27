@@ -1,0 +1,2 @@
+"video","start_s","end_s","frames","detections","tracks","mean_insects_per_frame","max_insects_per_frame","median_track_s","hot_cells","interactions"
+"Yellowjacket_1.mp4",0,20,100,175,3,1.35,3,6.8,227,2

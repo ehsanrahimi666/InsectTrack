@@ -1,0 +1,2 @@
+"video","start_s","end_s","frames","detections","tracks","mean_insects_per_frame","max_insects_per_frame","median_track_s","hot_cells"
+"Bees_on_Hibiscus_syriacus.webm",21,41,100,72,2,0.29,1,2.7,57

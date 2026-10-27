@@ -1,0 +1,2 @@
+"track","n","start","end","duration","path_length","net_displacement","straightness","mean_speed","max_speed","x_start","y_start","x_end","y_end","start_edge","end_edge","class"
+1,100,0,19.8,19.8,280.207756686963,33.7720085311528,0.120524888141771,14.151906903382,61.5307641533217,505.143173217773,258.557350158691,515.360946655273,226.368133544922,"interior","interior","butterfly"

@@ -1,0 +1,53 @@
+{
+  "video": "Bees_on_Hibiscus_syriacus.webm",
+  "analysed": [21, 41],
+  "fps": 5,
+  "width": 1280,
+  "height": 720,
+  "detector": "gdino",
+  "model": "grounding-dino-base",
+  "prompt": "insect",
+  "conf": 0.15,
+  "tracker": "bytetrack",
+  "tracker_args": [],
+  "stitch": true,
+  "bin": 1,
+  "heatmap_cell": 20,
+  "entrance": null,
+  "segment": false,
+  "video_info": {
+    "file": "Bees_on_Hibiscus_syriacus.webm",
+    "duration_s": 140.173,
+    "width": 1280,
+    "height": 720,
+    "frames": "NA",
+    "fps": 30,
+    "codec": "vp9",
+    "rotation": 0,
+    "display_width": 1280,
+    "display_height": 720
+  },
+  "software": {
+    "R": "R version 4.6.1 (2026-06-24)",
+    "InsectTrack": "0.1.0",
+    "python": {
+      "python": "3.13.17",
+      "numpy": "2.5.3",
+      "torch": "2.14.1+cpu",
+      "torchvision": "0.29.1+cpu",
+      "transformers": "5.20.2",
+      "ultralytics": "8.4.189",
+      "boxmot": "25.0.0",
+      "cv2": "4.14.0",
+      "PIL": "12.3.0",
+      "device": "cpu"
+    }
+  },
+  "run_time_s": {
+    "detection": 589.3,
+    "tracking": 0,
+    "analysis": 0,
+    "figures": 1.4,
+    "rendering": 36.3
+  }
+}

@@ -1,0 +1,2 @@
+"video","start_s","end_s","frames","detections","tracks","mean_insects_per_frame","max_insects_per_frame","median_track_s","hot_cells","n_in","n_out"
+"Bees_flying_in_HD_in_slow_motion.webm",60,80,100,4725,57,22.32,27,6.59999999999999,421,1,0

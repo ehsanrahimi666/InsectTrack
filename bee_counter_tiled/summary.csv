@@ -1,0 +1,2 @@
+"video","start_s","end_s","frames","detections","tracks","mean_insects_per_frame","max_insects_per_frame","median_track_s","hot_cells","n_in","n_out"
+"2023_06_05__19_51_24.mp4",0,10,50,632,13,2.96,6,1.2,170,0,0

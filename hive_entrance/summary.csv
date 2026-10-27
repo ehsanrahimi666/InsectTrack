@@ -1,0 +1,2 @@
+"video","start_s","end_s","frames","detections","tracks","mean_insects_per_frame","max_insects_per_frame","median_track_s","hot_cells","n_in","n_out"
+"Honeybee_hive_entrance.webm",0,20,100,2834,55,17.51,23,4,332,1,0

@@ -1,0 +1,2 @@
+"video","start_s","end_s","frames","detections","tracks","mean_insects_per_frame","max_insects_per_frame","median_track_s","hot_cells","n_in","n_out"
+"video_validacao_mota_30fps.mp4",0,75,2250,3332,36,1.06222222222222,5,1.76666666666667,78,2,1

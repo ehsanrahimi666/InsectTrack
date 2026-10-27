@@ -1,0 +1,2 @@
+"video","start_s","end_s","frames","detections","tracks","mean_insects_per_frame","max_insects_per_frame","median_track_s","hot_cells"
+"Ant_trail_on_concrete_kerb.webm",0,20,300,15103,601,29.5933333333333,205,0.733333333333333,346

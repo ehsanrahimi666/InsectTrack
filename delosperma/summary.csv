@@ -1,0 +1,2 @@
+"video","start_s","end_s","frames","detections","tracks","mean_insects_per_frame","max_insects_per_frame","median_track_s","hot_cells","visits"
+"delosperma_clip_10fps.mp4",0,60,600,2228,35,3.18833333333333,6,3.90000000000001,244,49
