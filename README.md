@@ -4,7 +4,7 @@ Twenty videos of bees, wasps, hornets, ants, flies and a butterfly analysed with
 the R package [InsectTrack](https://github.com/ehsanrahimi666/InsectTrack).
 Every insect has its own colour and identity number in the tracked videos.
 
-**Watch them at <https://ehsanrahimi666.github.io/InsectTrack-demos/>.**
+**Watch them at <https://ehsanrahimi666.github.io/InsectTrack/>.**
 
 Each folder holds the output of one call of `it_track_video()`:
 
